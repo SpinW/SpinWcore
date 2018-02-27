@@ -120,8 +120,7 @@ arma::mat spinw::arma_spinwave(double* qRange, spinwave_opt options) {
     }
     if (options.tid == -2) {
         std::cout << "HKL cube" << std::endl;
-        // This gives a seg fault for some reason :-(
-//        std::cout << (*hkl_cube) << std::endl;
+        std::cout << hkl_cube << std::endl;
     }
 
     arma::cube hkl0(hkl_cube), hklExt(hkl_cube);
