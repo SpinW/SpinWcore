@@ -1,13 +1,13 @@
 # SpinW_core
 This is the core functionality of SpinW written in C++. At the moment it is
-in development as a proof of concept and _DOES NOT WORK!_
+in development as a proof of concept and **DOES NOT WORK!**
 
 ## Requirements
 In order to build SpinW_core the following is required:
-- CMake >= 3.6 
-- gcc > 5.3
-- Armadillo 
-- Intel MKL
+- [CMake >= 3.6](https://cmake.org/) 
+- gcc > 5.3 (Visual studio in later releases)
+- [Armadillo](http://arma.sourceforge.net/) 
+- [Intel MKL](https://software.intel.com/en-us/mkl)
 
 And OpenMP development libraries if parallelization is required (recomended). 
 
@@ -55,13 +55,13 @@ opt.fid = -1;
 ```
 
 The HKL range is given by creating a C-pointer where the first 2 elements are
-the number of HKL end points and number of elements in HKL. i.e from [0 0 0] to [0 0 1] is 2 and the number of elements in [0 0 1] is 3.
+the number of HKL end points and number of elements in HKL. i.e from ```[0 0 0]``` to ```[0 0 1]``` is 2 and the number of elements in ```[0 0 1]``` is 3.
 
 ```matlab
 libpointer('doublePtr',[2, 3, 0 0 0, 0 0 1, 10])
 ```
 
-The Spectrum can be calculated by calling ```sw_spinwave``` and a double C-Pointer to the memory address is returned.
+The spectrum can be calculated by calling ```sw_spinwave``` and a double C-Pointer to the memory address is returned.
 
 ```matlab
 sw_spec = calllib('libSpinW','sw_spinwave',c_sw,hkl,opt)
