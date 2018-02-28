@@ -1,5 +1,5 @@
 # SpinW_core
-This is the core functionality of SpinW written in C++. At the moment it is
+This is the core functionality of SpinW written in C++ with a C interface for MATLAB and Python. At the moment it is
 in development as a proof of concept and **DOES NOT WORK!**
 
 ## Requirements
@@ -58,7 +58,7 @@ The HKL range is given by creating a C-pointer where the first 2 elements are
 the number of HKL end points and number of elements in HKL. i.e from ```[0 0 0]``` to ```[0 0 1]``` is 2 and the number of elements in ```[0 0 1]``` is 3.
 
 ```matlab
-libpointer('doublePtr',[2, 3, 0 0 0, 0 0 1, 10])
+hkl = libpointer('doublePtr',[2, 3, 0 0 0, 0 0 1, 10])
 ```
 
 The spectrum can be calculated by calling ```sw_spinwave``` and a double C-Pointer to the memory address is returned.

@@ -2,7 +2,7 @@
 // Created by ward_s on 19/02/18.
 //
 #include <iostream>
-#include "spinw.h"
+#include "../include/spinw.h"
 
 double* spinw::basisvector(bool norm) {
 

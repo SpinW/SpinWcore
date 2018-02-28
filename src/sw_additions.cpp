@@ -2,7 +2,7 @@
 // Created by ward_s on 20/02/18.
 //
 
-#include "sw_additions.h"
+#include "../include/sw_additions.h"
 
 //template<typename T> T arma_mod(T a, int n)
 //{
@@ -42,5 +42,4 @@ arma::mat arma_sw_qscan(double* qLim){
     }
     return A;
 };
-
 

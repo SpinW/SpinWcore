@@ -6,7 +6,7 @@
 #define SPINW_HSPINW_H
 
 
-#include "sw_helper.h"
+#include "../sw_structs.h"
 
 struct Hspinw;
 typedef struct Hspinw Hspinw;

@@ -3,8 +3,8 @@
 //
 
 #include <iostream>
-#include "spinw.h"
-#include "sw_additions.h"
+#include "../include/spinw.h"
+#include "../include/sw_additions.h"
 
 #define PI 3.14159265
 
@@ -43,7 +43,7 @@ arma::mat spinw::arma_spinwave(double* qRange, spinwave_opt options) {
         std::cout << "k" << std::endl;
         std::cout << k << std::endl;
     }
-    arma::mat km = k.t() % nExt;
+    arma::mat static km = k.t() % nExt;
     if (options.tid == -2) {
         std::cout << "km" << std::endl;
         std::cout << km << std::endl;
@@ -106,7 +106,7 @@ arma::mat spinw::arma_spinwave(double* qRange, spinwave_opt options) {
         options.notwin = true;
     }
 
-    arma::cube hkl_cube;
+    arma::cube hkl_cube(hkl.n_rows, hkl.n_cols, twin1.nTwin,arma::fill::zeros);
     long int nHkl = nHkl0;
     if (!options.notwin) {
         // In the abc coordinate system of the selected twin the scan is
@@ -123,12 +123,49 @@ arma::mat spinw::arma_spinwave(double* qRange, spinwave_opt options) {
         std::cout << hkl_cube << std::endl;
     }
 
-    arma::cube hkl0(hkl_cube), hklExt(hkl_cube);
+    arma::cube hkl0_cube(hkl_cube), hklExt_cube(hkl_cube);
     if (incomm){
-        hkl0.each_slice( [](arma::mat& X){ arma::solve(X, bv) * bv;}, true);
+        hkl0_cube.each_slice( [](arma::mat& X){arma::mat(arma::repmat(arma::vectorise(X), 1, 3));}, true);
+        arma::mat static kme = km/nExt;
+        hklExt_cube.each_slice([](arma::mat& X){arma::mat(
+            arma::join_horiz(arma::join_horiz(arma::vectorise(X - kme), arma::vectorise(X)), arma::vectorise(X + kme)));
+        },true);
+        hkl_cube.each_slice([](arma::mat& X){arma::mat(
+            arma::join_horiz(arma::join_horiz(arma::vectorise(X - km), arma::vectorise(X)), arma::vectorise(X + km)));
+        },true);
+        nHkl  *= 3;
+        nHkl0 *= 3;
     }
 
+    hkl = arma::reshape( arma::mat(hkl_cube.memptr(), hkl_cube.n_elem, 1, false), hkl_cube.n_rows, hkl_cube.n_cols*hkl_cube.n_slices);
+    if (options.tid == -2) {
+        std::cout << "HKL incomm twin" << std::endl;
+        std::cout << hkl << std::endl;
+    }
+    arma::mat hkl0 = arma::reshape( arma::mat(hkl0_cube.memptr(), hkl0_cube.n_elem, 1, false), hkl0_cube.n_rows, hkl0_cube.n_cols*hkl0_cube.n_slices);
+    if (options.tid == -2) {
+        std::cout << "HKL0 incomm twin" << std::endl;
+        std::cout << hkl0 << std::endl;
+    }
+    arma::mat hklExt = arma::reshape( arma::mat(hklExt_cube.memptr(), hklExt_cube.n_elem, 1, false), hklExt_cube.n_rows, hklExt_cube.n_cols*hklExt_cube.n_slices);
+    if (options.tid == -2) {
+        std::cout << "HKLEXT incomm twin" << std::endl;
+        std::cout << hklExt << std::endl;
+    }
 
+    // determines a twin index for every q point
+    arma::vec twinIdx(nTwin*nHkl);
+    for (int i = 0; i < nHkl; i++){
+        for (int j = 0; i < nTwin; i++){
+            twinIdx(i*nHkl + j) = j;
+        }
+    }
+
+    // Create the interaction matrix and atomic positions in the extended
+    // magnetic unit cell.
+    struct init_matrix this_return;
+//    void spinw::initmatrix(struct init_matrix *this_matrix, bool fitmode, bool plotmode, bool sortDM, bool zeroC, bool extend, bool conjugate)
+    initmatrix(&this_return, true, false, false, false, false, true);
 
 
 //
@@ -148,9 +185,13 @@ arma::mat spinw::arma_spinwave(double* qRange, spinwave_opt options) {
 
 std::pair<arma::cube, arma::mat> spinw::arma_twinq(arma::mat q0, arma::cube rotc){
 
+    std::cout << q0 << std::endl;
     static arma::mat bv = spinw::arma_basisvector(false);
+    std::cout << bv << std::endl;
     static arma::mat this_q0(q0);
+    std::cout << this_q0 << std::endl;
 
+    rotc.each_slice( [](arma::mat& X){ X.print();}, true);
     rotc.each_slice( [](arma::mat& X){ arma::solve(X, bv) * bv;}, true);
 
     arma::cube Qtwin(rotc);
@@ -181,3 +222,19 @@ arma::mat spinw::arma_basisvector(bool norm){
     };
     return thisVector;
 };
+
+void spinw::initmatrix(struct init_matrix *this_matrix, bool fitmode, bool plotmode, bool sortDM, bool zeroC, bool extend, bool conjugate){
+
+    arma::rowvec nExt0 = {(double)mag_str1.nExt[0],(double)mag_str1.nExt[1],(double)mag_str1.nExt[2]};
+
+    if (arma::sum(nExt0) == 3){
+        extend = false;
+    }
+
+    struct matom_struct mAtom;
+    matom(&mAtom);
+
+}
+
+void spinw::matom(matom_struct *this_matom){
+}

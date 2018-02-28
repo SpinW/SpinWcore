@@ -2,11 +2,11 @@
 // Created by ward_s on 19/02/18.
 //
 
-#include "spinw.h"
+#include "../../include/spinw.h"
 #include <iostream>
 
 extern "C" {
-    #include "Hspinw.h"
+    #include "../../include/helper/Hspinw.h"
 }
 
 Hspinw* create_sw(lattice lat, unit_cell cell, twin tw, mag_str mag, unit un){

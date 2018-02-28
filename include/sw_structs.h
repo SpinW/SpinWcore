@@ -2,8 +2,8 @@
 // Created by ward_s on 19/02/18.
 //
 
-#ifndef SPINW_SW_HELPER_H
-#define SPINW_SW_HELPER_H
+#ifndef SPINW_SW_STRUCTS_H
+#define SPINW_SW_STRUCTS_H
 
 typedef struct lattice{
     double angle[3];
@@ -103,4 +103,34 @@ typedef struct spinwave_opt{
 #endif
 }spinwave_opt;
 
-#endif //SPINW_SW_HELPER_H
+typedef struct SS{
+    double iso;
+    double ani;
+    double dm;
+    double gen;
+    double bq;
+    double dip;
+
+}SS;
+
+typedef struct SI{
+    double aniso;
+    double g;
+    double field;
+}SI;
+
+typedef struct init_matrix{
+    struct SS SS;
+    struct SI SI;
+    double RR[100][100];
+}init_matrix;
+
+typedef struct matom_struct{
+    double r[3][100];
+    int idx[100];
+    double S[100];
+    int nMatom;
+
+}matom_struct;
+
+#endif //SPINW_SW_STRUCTS_H
