@@ -2,28 +2,21 @@
 // Created by ward_s on 19/02/18.
 //
 
-#include "../../include/spinw.h"
+#include "../include/spinw.h"
+#include "../swsym/include/swsym.h"
 #include <iostream>
 
 extern "C" {
-    #include "../../include/helper/Hspinw.h"
+    #include "../include/Hspinw.h"
 }
 
-Hspinw* create_sw(lattice lat, unit_cell cell, twin tw, mag_str mag, unit un){
+Hspinw* create_sw(lattice lat, unit_cell cell, twin tw, mag_str mag, unit un, char* dat_dir){
     try {
-        return reinterpret_cast<Hspinw*>(new spinw(lat, cell, tw, mag, un));
+        return reinterpret_cast<Hspinw*>(new spinw(lat, cell, tw, mag, un, dat_dir));
     } catch (const std::exception &e) {
         std::cout << __func__ << "This has all gone wrong" << std::endl;
     }
 }
-
-//Hspinw* create_empty_sw(){
-//    try {
-//        return reinterpret_cast<Hspinw*>(new spinw());
-//    } catch (const std::exception &e) {
-//        std::cout << __func__ << "This has all gone wrong" << std::endl;
-//    }
-//}
 
 void destroy_sw(Hspinw* sw){
     try{
@@ -51,19 +44,11 @@ double* sw_spinwave(Hspinw* sw, double* qRange, spinwave_opt options){
     }
 }
 
-//spinwave_opt spinwave_opt_ini(spinwave_opt opt){
-//
-//    opt.notwin = false;
-//    opt.sortMode = true;
-//    opt.optmem = 0;
-//    opt.toll = 1e-4;
-//    opt.hermit = true;
-//    opt.omega_toll = 1e-5;
-//    opt.formfact = false;
-//    opt.gtensor = false;
-//    opt.cmplxBase = false;
-//    opt.tid = -1;
-//    opt.fid = -1;
-//
-//    return opt;
-//}
+Hsw_sym* loadsym(char* dat_dir){
+    try{
+        return reinterpret_cast<Hsw_sym*>(new swsym(dat_dir));
+    } catch (const std::exception &e) {
+        std::cout << __func__ << ": This has all gone wrong" << std::endl;
+        std::cout << e.what() << std::endl;
+    }
+}

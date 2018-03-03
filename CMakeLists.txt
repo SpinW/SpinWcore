@@ -1,7 +1,10 @@
 cmake_minimum_required(VERSION 3.6)
+
 project(SpinW)
 
 set(CMAKE_CXX_STANDARD 11)
+#Make highly optimised
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
 
 # I've had problems with gcc < 5.3 and OpenMP does not work correctly.
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
@@ -41,6 +44,6 @@ if (MKL_FOUND)
 endif()
 
 # Make the shared library
-add_library(SpinW SHARED src/spinw.cpp include/spinw.h src/helper/Hspinw.cpp include/helper/Hspinw.h include/sw_structs.h src/sw_additions.cpp include/sw_additions.h src/spinw_external.cpp src/swsym/swsym.cpp include/swsym/swsym.h)
+add_library(SpinW SHARED src/spinw.cpp include/spinw.h src/Hspinw.cpp include/Hspinw.h include/sw_structs.h src/sw_additions.cpp include/sw_additions.h src/spinw_external.cpp swsym/src/swsym.cpp swsym/include/swsym.h)
 # Link with the required libraries.
-target_link_libraries(SpinW ${ARMADILLO_LIBRARIES} ${LAPACK_INCLUDE_DIRS} ${MKL_LIBRARIES} pthread dl)
+target_link_libraries(SpinW ${ARMADILLO_LIBRARIES} ${MKL_LIBRARIES} pthread dl)

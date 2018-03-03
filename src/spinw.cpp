@@ -8,12 +8,13 @@
 
 #define PI 3.14159265
 
-spinw::spinw(lattice latt, unit_cell cell, twin tw, mag_str mag, unit un) {
+spinw::spinw(lattice latt, unit_cell cell, twin tw, mag_str mag, unit un, char *dat_folder) {
     lattice1 = latt;
     unit_cell1 =cell;
     twin1 = tw;
     mag_str1 = mag;
     unit1 = un;
+    dat_dir = dat_folder;
 }
 
 spinw::~spinw(){
@@ -237,4 +238,5 @@ void spinw::initmatrix(struct init_matrix *this_matrix, bool fitmode, bool plotm
 }
 
 void spinw::matom(matom_struct *this_matom){
+
 }

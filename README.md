@@ -1,18 +1,18 @@
-# SpinW_core
+# SpinW_Core
 This is the core functionality of SpinW written in C++ with a C interface for MATLAB and Python. At the moment it is
 in development as a proof of concept and **DOES NOT WORK!**
 
 ## Requirements
 In order to build SpinW_core the following is required:
-- [CMake >= 3.6](https://cmake.org/) 
-- gcc > 5.3 (Visual studio in later releases)
+- [CMake >= 3.6](https://cmake.org/) (Visual studio in later releases)
+- gcc >= 4.8 (>= 5.3 recommended) 
 - [Armadillo](http://arma.sourceforge.net/) 
 - [Intel MKL](https://software.intel.com/en-us/mkl)
 
 And OpenMP development libraries if parallelization is required (recomended). 
 
 ## Testing - MATLAB
-The library can be used in MATLAB by calling the library:
+The library can be used in MATLAB by calling the library through it's C interface:
 
 ```matlab
 [notfound, warnings] = loadlibrary(fullfile(pwd,'libSpinW.so'), 'Hspinw.h');

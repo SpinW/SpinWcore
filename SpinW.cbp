@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="SpinW"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/home/ward_s/CLionProjects/spinw_core"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j4 -f &quot;/home/ward_s/CLionProjects/spinw_core/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/gmake -j4 -f &quot;/home/ward_s/CLionProjects/spinw_core/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j4 -f &quot;/home/ward_s/CLionProjects/spinw_core/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j4 -f &quot;/home/ward_s/CLionProjects/spinw_core/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/home/ward_s/CLionProjects/spinw_core"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j4 -f &quot;/home/ward_s/CLionProjects/spinw_core/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/gmake -j4 -f &quot;/home/ward_s/CLionProjects/spinw_core/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j4 -f &quot;/home/ward_s/CLionProjects/spinw_core/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j4 -f &quot;/home/ward_s/CLionProjects/spinw_core/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/home/ward_s/CLionProjects/spinw_core"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j4 -f &quot;/home/ward_s/CLionProjects/spinw_core/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/gmake -j4 -f &quot;/home/ward_s/CLionProjects/spinw_core/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j4 -f &quot;/home/ward_s/CLionProjects/spinw_core/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j4 -f &quot;/home/ward_s/CLionProjects/spinw_core/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="SpinW">
+				<Option output="/home/ward_s/CLionProjects/spinw_core/libSpinW.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/ward_s/CLionProjects/spinw_core"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/opt/rh/devtoolset-7/root/usr/lib/gcc/x86_64-redhat-linux/7/../../../../include/c++/7"/>
+					<Add directory="/opt/rh/devtoolset-7/root/usr/lib/gcc/x86_64-redhat-linux/7/../../../../include/c++/7/x86_64-redhat-linux"/>
+					<Add directory="/opt/rh/devtoolset-7/root/usr/lib/gcc/x86_64-redhat-linux/7/../../../../include/c++/7/backward"/>
+					<Add directory="/opt/rh/devtoolset-7/root/usr/lib/gcc/x86_64-redhat-linux/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/opt/rh/devtoolset-7/root/usr/include"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j4 -f &quot;/home/ward_s/CLionProjects/spinw_core/Makefile&quot;  VERBOSE=1 SpinW"/>
+					<CompileFile command="/usr/bin/gmake -j4 -f &quot;/home/ward_s/CLionProjects/spinw_core/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j4 -f &quot;/home/ward_s/CLionProjects/spinw_core/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j4 -f &quot;/home/ward_s/CLionProjects/spinw_core/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="SpinW/fast">
+				<Option output="/home/ward_s/CLionProjects/spinw_core/libSpinW.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/ward_s/CLionProjects/spinw_core"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/opt/rh/devtoolset-7/root/usr/lib/gcc/x86_64-redhat-linux/7/../../../../include/c++/7"/>
+					<Add directory="/opt/rh/devtoolset-7/root/usr/lib/gcc/x86_64-redhat-linux/7/../../../../include/c++/7/x86_64-redhat-linux"/>
+					<Add directory="/opt/rh/devtoolset-7/root/usr/lib/gcc/x86_64-redhat-linux/7/../../../../include/c++/7/backward"/>
+					<Add directory="/opt/rh/devtoolset-7/root/usr/lib/gcc/x86_64-redhat-linux/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/opt/rh/devtoolset-7/root/usr/include"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j4 -f &quot;/home/ward_s/CLionProjects/spinw_core/Makefile&quot;  VERBOSE=1 SpinW/fast"/>
+					<CompileFile command="/usr/bin/gmake -j4 -f &quot;/home/ward_s/CLionProjects/spinw_core/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j4 -f &quot;/home/ward_s/CLionProjects/spinw_core/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j4 -f &quot;/home/ward_s/CLionProjects/spinw_core/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/home/ward_s/CLionProjects/spinw_core/include/Hspinw.h">
+			<Option target="SpinW"/>
+		</Unit>
+		<Unit filename="/home/ward_s/CLionProjects/spinw_core/include/spinw.h">
+			<Option target="SpinW"/>
+		</Unit>
+		<Unit filename="/home/ward_s/CLionProjects/spinw_core/include/sw_additions.h">
+			<Option target="SpinW"/>
+		</Unit>
+		<Unit filename="/home/ward_s/CLionProjects/spinw_core/include/sw_structs.h">
+			<Option target="SpinW"/>
+		</Unit>
+		<Unit filename="/home/ward_s/CLionProjects/spinw_core/src/Hspinw.cpp">
+			<Option target="SpinW"/>
+		</Unit>
+		<Unit filename="/home/ward_s/CLionProjects/spinw_core/src/spinw.cpp">
+			<Option target="SpinW"/>
+		</Unit>
+		<Unit filename="/home/ward_s/CLionProjects/spinw_core/src/spinw_external.cpp">
+			<Option target="SpinW"/>
+		</Unit>
+		<Unit filename="/home/ward_s/CLionProjects/spinw_core/src/sw_additions.cpp">
+			<Option target="SpinW"/>
+		</Unit>
+		<Unit filename="/home/ward_s/CLionProjects/spinw_core/swsym/include/swsym.h">
+			<Option target="SpinW"/>
+		</Unit>
+		<Unit filename="/home/ward_s/CLionProjects/spinw_core/swsym/src/swsym.cpp">
+			<Option target="SpinW"/>
+		</Unit>
+		<Unit filename="/home/ward_s/CLionProjects/spinw_core/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+		<Unit filename="/home/ward_s/CLionProjects/spinw_core/FindMKL.cmake">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>

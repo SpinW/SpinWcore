@@ -8,3 +8,7 @@ cmake-build-debug-gcc_7/
 cmake-build-release-gcc_7/
 
 cmake-build-release/
+
+Makefile
+
+*.so

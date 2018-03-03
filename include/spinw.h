@@ -7,6 +7,7 @@
 
 #include <armadillo>
 #include "sw_structs.h"
+#include <string>
 
 class spinw {
     lattice lattice1;
@@ -17,10 +18,11 @@ class spinw {
     coupling coupling1;
     mag_str mag_str1;
     unit unit1;
+    std::string dat_dir;
 
 public:
 
-    explicit spinw(lattice latt, unit_cell cell, twin tw, mag_str mag, unit un);
+    explicit spinw(lattice latt, unit_cell cell, twin tw, mag_str mag, unit un, char *dat_folder);
     ~spinw();
 
     arma::mat arma_spinwave(double* qRange, spinwave_opt options);
