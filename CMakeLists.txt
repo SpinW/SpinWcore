@@ -4,7 +4,7 @@ project(SpinW)
 
 set(CMAKE_CXX_STANDARD 11)
 #Make highly optimised
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
 
 # I've had problems with gcc < 5.3 and OpenMP does not work correctly.
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")

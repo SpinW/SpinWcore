@@ -20,7 +20,7 @@ class swsym{
 
 public:
     explicit swsym(char* dat_dir);
-//    arma::cube interpretSymString(std::string inString);
+    void interpretSymString(arma::cube &this_cube, std::string inString);
 //    void position(TYPE symOp, TYPE r0, TYPE fid, TYPE tol, TYPE& r, TYPE& aIdx, _Opinfo& opInfo) ;
 
 };
