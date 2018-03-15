@@ -5,11 +5,14 @@
 #ifndef SPINW_POSITION_H
 #define SPINW_POSITION_H
 
-TYPE sw_cmod(TYPE r, TYPE tol) ;
+#include "swsym.h"
+
+TYPE sw_cmod(TYPE r, double tol) ;
 
 struct _Opinfo
 {
-    TYPE ismoved, opmove ;
+    bool ismoved[];
+    bool opmove[] ;
 } ;
 
 #endif //SPINW_POSITION_H

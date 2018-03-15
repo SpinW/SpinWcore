@@ -224,7 +224,7 @@ arma::mat spinw::arma_basisvector(bool norm){
     return thisVector;
 };
 
-void spinw::initmatrix(struct init_matrix *this_matrix, bool fitmode, bool plotmode, bool sortDM, bool zeroC, bool extend, bool conjugate){
+void spinw::initmatrix(struct init_matrix &this_matrix, bool fitmode, bool plotmode, bool sortDM, bool zeroC, bool extend, bool conjugate){
 
     arma::rowvec nExt0 = {(double)mag_str1.nExt[0],(double)mag_str1.nExt[1],(double)mag_str1.nExt[2]};
 

@@ -7,9 +7,8 @@
 
 //#include "../include/position.h"
 #include <armadillo>
-
 #include <string>
-
+#include "position.h"
 
 class swsym{
 //    arma::mat symOp;
@@ -21,6 +20,7 @@ class swsym{
 public:
     explicit swsym(char* dat_dir);
     void interpretSymString(arma::cube &this_cube, std::string inString);
+    void position(double r0[], int nAtom, int fid, double tol, double& r[], int& aIdx, _Opinfo& opInfo);
 //    void position(TYPE symOp, TYPE r0, TYPE fid, TYPE tol, TYPE& r, TYPE& aIdx, _Opinfo& opInfo) ;
 
 };
