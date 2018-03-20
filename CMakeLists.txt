@@ -33,15 +33,15 @@ endif()
 
 # We use Intel MKL as a numeric library but fall back to LAPACK and BLAS if this fails.
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR})
-find_package(MKL REQUIRED)
-if (MKL_FOUND)
-    include_directories(${MKL_INCLUDE_DIRS})
+find_package(MKL)
+#if (MKL_FOUND)
+include_directories(${MKL_INCLUDE_DIR})
 #    set(LAPACK_INCLUDE_DIRS '')
 #else()
 #    # This should find the BLAS libraries as well.
 #    find_package(LAPACK REQUIRED)
 #    include_directories(${LAPACK_INCLUDE_DIRS})
-endif()
+#endif()
 
 # Make the shared library
 add_library(SpinW SHARED src/spinw.cpp include/spinw.h src/Hspinw.cpp include/Hspinw.h include/sw_structs.h src/sw_additions.cpp include/sw_additions.h src/spinw_external.cpp swsym/src/swsym.cpp swsym/include/swsym.h src/atom.cpp include/atom.h src/templateFuncs.cpp include/templateFuncs.h)
