@@ -7,12 +7,7 @@
 
 #include "swsym.h"
 
-TYPE sw_cmod(TYPE r, double tol) ;
+//TYPE sw_cmod(TYPE r, double tol) ;
 
-struct _Opinfo
-{
-    bool ismoved[];
-    bool opmove[] ;
-} ;
 
 #endif //SPINW_POSITION_H

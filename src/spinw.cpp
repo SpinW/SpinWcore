@@ -112,9 +112,9 @@ arma::mat spinw::arma_spinwave(double* qRange, spinwave_opt options) {
     if (!options.notwin) {
         // In the abc coordinate system of the selected twin the scan is
         // rotated opposite direction to rotC.
-        std::pair <arma::cube, arma::mat> twinq = spinw::arma_twinq(hkl, rotc);
+        std::tuple <arma::cube, arma::mat> twinq = spinw::arma_twinq(hkl, rotc);
         nHkl = nHkl0 * nTwin;
-        hkl_cube = twinq.first;
+        hkl_cube = std::get<0>(twinq);
     } else {
         hkl_cube.slice(0) = hkl;
         nHkl = nHkl0;
@@ -166,7 +166,7 @@ arma::mat spinw::arma_spinwave(double* qRange, spinwave_opt options) {
     // magnetic unit cell.
     struct init_matrix this_return;
 //    void spinw::initmatrix(struct init_matrix *this_matrix, bool fitmode, bool plotmode, bool sortDM, bool zeroC, bool extend, bool conjugate)
-    initmatrix(&this_return, true, false, false, false, false, true);
+    initmatrix(this_return, true, false, false, false, false, true);
 
 
 //
@@ -184,7 +184,7 @@ arma::mat spinw::arma_spinwave(double* qRange, spinwave_opt options) {
     return hkl;
 };
 
-std::pair<arma::cube, arma::mat> spinw::arma_twinq(arma::mat q0, arma::cube rotc){
+std::tuple<arma::cube,arma::mat> spinw::arma_twinq(arma::mat q0, arma::cube rotc){
 
     std::cout << q0 << std::endl;
     static arma::mat bv = spinw::arma_basisvector(false);
@@ -192,13 +192,12 @@ std::pair<arma::cube, arma::mat> spinw::arma_twinq(arma::mat q0, arma::cube rotc
     static arma::mat this_q0(q0);
     std::cout << this_q0 << std::endl;
 
-    rotc.each_slice( [](arma::mat& X){ X.print();}, true);
     rotc.each_slice( [](arma::mat& X){ arma::solve(X, bv) * bv;}, true);
 
     arma::cube Qtwin(rotc);
     Qtwin.each_slice( [](arma::mat& X){this_q0 * X;}, true);
 
-    std::pair <arma::cube, arma::mat> return_pair (Qtwin, rotc);
+    std::tuple <arma::cube, arma::mat> return_pair (Qtwin, rotc);
     return return_pair;
 }
 

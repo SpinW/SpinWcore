@@ -3,6 +3,7 @@
 //
 
 #include "../include/swsym.h"
+#include "../../include/templateFuncs.h"
 #include <iostream>
 #include <fstream>
 #include <algorithm>
@@ -46,6 +47,8 @@ swsym::swsym(char* dat_dirPt){
     } else {
         std::cout << "Unable to open file:" << std::endl << symFile << std::endl;
     }
+//    std::cout << permute((arma::Cube<double> &) symOp(0), std::tuple<arma::uword,arma::uword,arma::uword>(1, 2, 3)) << std::endl;
+//    std::cout << armaMod(arma::mat(3,3,arma::fill::eye),1) << std::endl;
 }
 
 void swsym::interpretSymString(arma::cube &this_cube, std::string symStr) {
