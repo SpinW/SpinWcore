@@ -50,7 +50,7 @@ add_library(SpinW SHARED src/spinw.cpp include/spinw.h src/Hspinw.cpp
         swsym/src/swsym.cpp swsym/include/swsym.h
         swsym/src/position.cpp swsym/include/position.h
         src/atom.cpp include/atom.h
-        src/templateFuncs.cpp include/templateFuncs.h)
+        src/templateFuncs.tpp include/templateFuncs.h)
 
 # Link with the required libraries.
 target_link_libraries(SpinW ${ARMADILLO_LIBRARIES} ${MKL_LIBRARIES} pthread dl)
