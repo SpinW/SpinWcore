@@ -3,6 +3,21 @@
 #  MKL_LIBRARIES, the libraries needed to use Intel's implementation of BLAS & LAPACK.
 #  MKL_FOUND, If false, do not try to use MKL.
 
+
+find_path(MKL_ROOT_DIR
+        include/mkl.h
+        PATHS
+        $ENV{MKL_ROOT}
+        /opt/intel/mkl/*/
+        /opt/intel/cmkl/*/
+        /Library/Frameworks/Intel_MKL.framework/Versions/Current/lib/universal
+        "Program Files (x86)/Intel/ComposerXE-2011/mkl"
+        )
+MESSAGE(STATUS "Found MKL: ${MKL_ROOT_DIR}")
+find_path(MKL_INCLUDE_DIR mkl.h PATHS ${MKL_ROOT_DIR}/include)
+MESSAGE(STATUS "Found MKL include: ${MKL_INCLUDE_DIR}")
+
+
 SET(MKL_NAMES ${MKL_NAMES} mkl_lapack)
 SET(MKL_NAMES ${MKL_NAMES} mkl_intel_thread)
 SET(MKL_NAMES ${MKL_NAMES} mkl_core)
