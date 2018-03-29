@@ -5,16 +5,19 @@
 #include <armadillo>
 
 
+//template<typename T>
+//T asEvaled(const T &X) {
+//    return X.eval();
+//}
+
 template<typename T>
-arma::Mat<typename T::elem_type> as_Mat(const T &X) {
-    return {X};
+arma::Mat<typename T::elem_type>armaModM(const T &X, int n) {
+    return X - n*arma::floor(X/n);
 }
 
-
 template<typename T>
-T armaMod(const T &X, int n) {
-    const auto &an = as_Mat(X / n);
-    return X - floor(an) * n;
+arma::Cube<typename T::elem_type>armaModC(const T &X, int n) {
+    return X - n*arma::floor(X/n);
 }
 
 template<typename T>
@@ -80,18 +83,20 @@ static arma::Cube<typename T::elem_type> permute(const T &cube, int order[]) {
     return output;
 }
 
-template<typename T>
-arma::Mat<typename T::elem_type> mmat(const T &X, const T &Y, int dim[]) {
+template<typename T, typename TT>
+arma::Mat<typename T::elem_type> mmat(const T &X, const TT &Y, int dim[]) {
+
+    arma::Mat <typename T::elem_type> YY(Y);
 
     arma::uword nA[2];
     arma::uword nB[2];
 
-    if (dim[0]==2 && dim[1]==1){
+    if ((dim[0] == 2) & (dim[1] == 1)){
         nA[0] = X.n_cols; nA[1] = X.n_rows;
-        nB[0] = Y.n_cols; nB[1] = Y.n_rows;
+        nB[0] = YY.n_cols; nB[1] = YY.n_rows;
     } else{
         nA[0] = X.n_rows; nA[1] = X.n_cols;
-        nB[0] = Y.n_rows; nB[1] = Y.n_cols;
+        nB[0] = YY.n_rows; nB[1] = YY.n_cols;
     }
     arma::uword repv[3] = {1, 1, 1};
     repv[dim[0]-1] = nA[0];
@@ -102,7 +107,7 @@ arma::Mat<typename T::elem_type> mmat(const T &X, const T &Y, int dim[]) {
     idx[2]            = dim[1];
 
     // Create temp and return type.
-    arma::Cube<typename T::elem_type>A(X.n_rows, X.n_cols,nB[1], arma::fill::zeros);
+    arma::Cube<typename T::elem_type>A(X.n_rows, X.n_cols, nB[1], arma::fill::zeros);
     arma::Cube<typename T::elem_type>B;
     arma::Mat <typename T::elem_type>C;
 
@@ -112,14 +117,14 @@ arma::Mat<typename T::elem_type> mmat(const T &X, const T &Y, int dim[]) {
     // Build B
     if (idx[1] == 1)
     {
-        B = arma::zeros(repv[0], Y.n_rows, Y.n_cols);
+        B = arma::zeros(repv[0], YY.n_rows, YY.n_cols);
         for (arma::uword i = 0; i < B.n_slices; i++) {
-            B.slice(i) = arma::repmat(Y(arma::span::all, i).t(), repv[0], repv[1]);
+            B.slice(i) = arma::repmat(YY.col(i).t(), repv[0], repv[1]);
         }
     } else {
-        B = arma::zeros(Y.n_cols, repv[1], Y.n_rows);
+        B = arma::zeros(YY.n_cols, repv[1], YY.n_rows);
         for (arma::uword i = 0; i < B.n_slices; i++) {
-            B.slice(i) = arma::repmat(Y(i,arma::span::all).t(), repv[0], repv[1]);
+            B.slice(i) = arma::repmat(YY.row(i).t(), repv[0], repv[1]);
         }
     }
 
@@ -142,4 +147,22 @@ arma::Mat<typename T::elem_type> mmat(const T &X, const T &Y, int dim[]) {
         }
     }
     return C;
+}
+
+template <typename T> arma::Mat<typename T::elem_type> cmod(T &inMat){
+    arma::Mat<typename T::elem_type> retMat = armaMod(inMat,1);
+    retMat = arma::find(retMat > (arma::ones(retMat.n_rows,retMat.n_cols) - retMat)) -= 1;
+    return retMat;
+}
+
+template <typename T> arma::Mat<typename T::elem_type> uniquetol(T inMat, double tol){
+    arma::Mat<typename T::elem_type> unique = inMat;
+    arma::uword idx = 1;
+    while (inMat.n_cols > 0){
+        unique(arma::span(),idx) = inMat(arma::span(),0);
+        arma::Row<typename T::elem_type> idxSame = arma::sum(arma::square(inMat - unique(arma::span(),idx)),0);
+        idxSame.each_col() <= (tol*tol);
+    }
+
+    return unique;
 }

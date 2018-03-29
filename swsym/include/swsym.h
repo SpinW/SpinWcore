@@ -5,10 +5,8 @@
 #ifndef SPINW_SWSYM_H
 #define SPINW_SWSYM_H
 
-//#include "../include/position.h"
 #include <armadillo>
 #include <string>
-#include "position.h"
 
 typedef struct Opinfo
 {
@@ -27,9 +25,7 @@ class swsym{
 public:
     explicit swsym(char* dat_dir);
     void interpretSymString(arma::cube &this_cube, std::string inString);
-    void position(double& r0, int nAtom, int fid, double tol, double& r, int& aIdx, Opinfo& opInfo);
-//    void position(TYPE symOp, TYPE r0, TYPE fid, TYPE tol, TYPE& r, TYPE& aIdx, _Opinfo& opInfo) ;
-
+    std::tuple<arma::mat, arma::mat> position(arma::mat &r0, int symN, double tol);
 };
 
 #endif //SPINW_SWSYM_H

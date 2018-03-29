@@ -44,13 +44,14 @@ include_directories(${MKL_INCLUDE_DIR})
 #endif()
 
 # Make the shared library
-add_library(SpinW SHARED src/spinw.cpp include/spinw.h src/Hspinw.cpp
-        include/Hspinw.h include/sw_structs.h
-        src/sw_additions.cpp include/sw_additions.h src/spinw_external.cpp
-        swsym/src/swsym.cpp swsym/include/swsym.h
+add_library(SpinW SHARED src/spinw.cpp include/spinw.h src/Hspinw.cpp # The main files and C interface
+        include/Hspinw.h include/sw_structs.h # Helpful structures
+        src/sw_additions.cpp include/sw_additions.h src/spinw_external.cpp # Helpful functions
+        swsym/src/swsym.cpp swsym/include/swsym.h # Start of symmetry files
         swsym/src/position.cpp swsym/include/position.h
         src/atom.cpp include/atom.h
-        src/templateFuncs.tpp include/templateFuncs.h)
+        src/templateFuncs.tpp include/templateFuncs.h # Template functions
+        )
 
 # Link with the required libraries.
 target_link_libraries(SpinW ${ARMADILLO_LIBRARIES} ${MKL_LIBRARIES} pthread dl)
