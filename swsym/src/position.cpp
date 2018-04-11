@@ -18,8 +18,7 @@ std::tuple<arma::mat, arma::mat> swsym::position(arma::mat &r0, int symN, double
         if (rTemp.n_elem > 3){
             rTemp = armaModC(rTemp,1);
             arma::find(rTemp > (1 - tol)) -= 1;
-        } else {
-
+            rTemp.slice(0) = uniquetol(rTemp.slice(0),tol);
         }
         r = arma::join_rows(r, rTemp.slice(0));
     }

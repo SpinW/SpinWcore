@@ -150,19 +150,38 @@ arma::Mat<typename T::elem_type> mmat(const T &X, const TT &Y, int dim[]) {
 }
 
 template <typename T> arma::Mat<typename T::elem_type> cmod(T &inMat){
-    arma::Mat<typename T::elem_type> retMat = armaMod(inMat,1);
+    arma::Mat<typename T::elem_type> retMat = armaModM(inMat,1);
     retMat = arma::find(retMat > (arma::ones(retMat.n_rows,retMat.n_cols) - retMat)) -= 1;
     return retMat;
 }
 
 template <typename T> arma::Mat<typename T::elem_type> uniquetol(T inMat, double tol){
-    arma::Mat<typename T::elem_type> unique = inMat;
-    arma::uword idx = 1;
-    while (inMat.n_cols > 0){
-        unique(arma::span(),idx) = inMat(arma::span(),0);
-        arma::Row<typename T::elem_type> idxSame = arma::sum(arma::square(inMat - unique(arma::span(),idx)),0);
-        idxSame.each_col() <= (tol*tol);
-    }
+/*
+    Returns unique column vectors within the given
+    `tol` tolerance. Two column vectors are considered
+    unequal, if the distance between them is larger than
+    the tolerance ($\delta$):
+*/
+    arma::Mat<typename T::elem_type> unique; // Placeholder for the return
 
+    while (inMat.n_cols > 0) {
+        // Create keep/destroy vectors
+        std::vector<arma::uword> keepIDX, destIDX;
+        keepIDX.reserve(inMat.n_cols);
+        destIDX.reserve(inMat.n_cols);
+
+        // Loop over and check if we want to keep or destroy
+        for (arma::uword ind = 0; ind < inMat.n_cols; ind++) {
+            if (!arma::approx_equal(inMat(arma::span(), 0), inMat(arma::span(), ind), "absdiff", tol)) {
+                keepIDX.push_back(ind);
+            } else {
+                destIDX.push_back(ind);
+            }
+        }
+        // Copy first to unique
+        unique = arma::join_rows(unique, inMat(arma::span(), destIDX[0]));
+        // Purge all duplicates (including 0 idx)
+        inMat= inMat.cols(arma::uvec(keepIDX));
+    }
     return unique;
 }
