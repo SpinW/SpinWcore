@@ -51,7 +51,7 @@ static arma::Cube<typename T::elem_type> permute(const T &cube, int order[]) {
             if (op3 == 3) { // 2 1 3
                 output.slice(s) = this_slice.t(); // cxr = (rxc)'
             } else {
-                throw std::runtime_error(std::string("Element is duplicated"));
+                throw std::invalid_argument(std::string("Element is duplicated"));
             }
         } else { // [1 2 3] [1 2 3] [1 2 3]
             if (op3 == 1) { // [1 2 3] [1 2 3] [1]
@@ -61,7 +61,7 @@ static arma::Cube<typename T::elem_type> permute(const T &cube, int order[]) {
                     } else if (op1 == 3) { // [3] [1 2 3] [1]
                         output.slice(r)(s, arma::span::all) = this_slice(r, arma::span::all);
                     } else {
-                        throw std::runtime_error(std::string("Element is duplicated"));
+                        throw std::invalid_argument(std::string("Element is duplicated"));
                     }
                 }
             } else if (op3 == 2) { // [1 2 3] [1 2 3] [2]
@@ -71,11 +71,11 @@ static arma::Cube<typename T::elem_type> permute(const T &cube, int order[]) {
                     } else if (op2 == 3) { // [1 2 3] [3] [2]
                         output.slice(c)(arma::span::all, s) = this_slice(arma::span::all, c);
                     } else {
-                        throw std::runtime_error(std::string("Element is duplicated"));
+                        throw std::invalid_argument(std::string("Element is duplicated"));
                     }
                 }
             } else{
-                throw std::runtime_error(std::string("Element is duplicated"));
+                throw std::invalid_argument(std::string("Element is duplicated"));
             }
         }
     }
@@ -90,6 +90,13 @@ arma::Mat<typename T::elem_type> mmat(const T &X, const TT &Y, int dim[]) {
 
     arma::uword nA[2];
     arma::uword nB[2];
+
+    if (dim[0] == dim[1]){
+        throw std::invalid_argument(std::string("Dimension element is duplicated"));
+    }
+    if ((dim[0] > 2) || (dim[0] < 0) || (dim[1] > 2) || (dim[1] < 0)){
+        throw std::invalid_argument(std::string("Dimension element has to be 1 or 2"));
+    }
 
     if ((dim[0] == 2) & (dim[1] == 1)){
         nA[0] = X.n_cols; nA[1] = X.n_rows;

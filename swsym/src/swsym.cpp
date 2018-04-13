@@ -45,7 +45,8 @@ swsym::swsym(char* dat_dirPt){
         }
         symFileStream.close();
     } else {
-        std::cout << "Unable to open file:" << std::endl << symFile << std::endl;
+        throw std::invalid_argument(std::string("Unable to open dat file"));
+//        std::cout << "Unable to open file:" << std::endl << symFile << std::endl;
     }
 }
 
@@ -67,7 +68,6 @@ void swsym::interpretSymString(arma::cube &this_cube, std::string symStr) {
             vNew.fill(0);
             nSign = 1 ;
             nNew = (int)(3*((double)nNew/3 - floor((double)nNew/3)) +1);
-
         }
         else if (this_string  == ";")
         {
@@ -100,10 +100,11 @@ void swsym::interpretSymString(arma::cube &this_cube, std::string symStr) {
         else if (this_string == "1" || this_string == "2" || this_string == "3")
         {
             this_cube(nNew, 3, nOp) = (double)(symStr[ii]-'0')/(double)(symStr[ii+2]-'0');
-            ii+=2 ;
+            ii+=2;
         }
-        ii++ ;
+        ii++;
     }
     this_cube(arma::span(nNew,nNew), arma::span(0,2), arma::span(nOp,nOp)) = vNew ;
-    this_cube(arma::span::all, arma::span::all, arma::span(nOp+1,this_cube.n_slices-1)).fill(NAN);
+    this_cube.shed_slices(nOp+1,this_cube.n_slices-1);
+//    this_cube(arma::span::all, arma::span::all, arma::span(nOp+1,this_cube.n_slices-1)).fill(NAN);
 }

@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.6)
 
 project(SpinW)
+set(DO_TESTS "TRUE")
 
 set(CMAKE_CXX_STANDARD 11)
 #Make highly optimised
@@ -62,4 +63,8 @@ target_link_libraries(SpinW
         ${MKL_LIBRARIES} pthread dl)
 
 # We can add tests here...
-add_subdirectory(tests/templates)
+if(DO_TESTS)
+    message(WARNING "You are using an unsupported compiler! Compilation has only been tested with GCC.")
+    set(MAKE_IDIVIDUAL "FALSE")
+    add_subdirectory(tests)
+endif()
