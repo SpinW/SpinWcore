@@ -5,7 +5,7 @@
 #ifndef SPINW_SW_STRUCTS_H
 #define SPINW_SW_STRUCTS_H
 
-typedef struct lattice{
+typedef struct lattice {
     double angle[3];
     double lat_const[3];
     double sym[3][4][100]; // We have up to 100 symmetry operations..

@@ -65,7 +65,7 @@ arma::mat spinw::arma_spinwave(double* qRange, spinwave_opt options) {
     }
     // Calculates momentum transfer in A^-1 units.
     ;
-    arma::mat hklA = 2 * PI * (arma::solve(arma_basisvector(false), hkl));
+    arma::mat hklA = 2 * PI * (arma::solve(arma_basisvector(this->lattice1, false), hkl));
     if (options.tid == -2) {
         std::cout << "hklA" << std::endl;
         std::cout << hklA << std::endl;
@@ -184,48 +184,22 @@ arma::mat spinw::arma_spinwave(double* qRange, spinwave_opt options) {
     return hkl;
 };
 
-std::tuple<arma::cube,arma::mat> spinw::arma_twinq(arma::mat q0, arma::cube rotc){
+std::tuple<arma::cube,arma::mat> spinw::arma_twinq(arma::mat q0, arma::cube rotc) {
 
     std::cout << q0 << std::endl;
-    static arma::mat bv = spinw::arma_basisvector(false);
+    static arma::mat bv = arma_basisvector(this->lattice1, false);
     std::cout << bv << std::endl;
     static arma::mat this_q0(q0);
     std::cout << this_q0 << std::endl;
 
-    rotc.each_slice( [](arma::mat& X){ arma::solve(X, bv) * bv;}, true);
+    rotc.each_slice([](arma::mat &X) { arma::solve(X, bv) * bv; }, true);
 
     arma::cube Qtwin(rotc);
-    Qtwin.each_slice( [](arma::mat& X){this_q0 * X;}, true);
+    Qtwin.each_slice([](arma::mat &X) { this_q0 * X; }, true);
 
-    std::tuple <arma::cube, arma::mat> return_pair (Qtwin, rotc);
+    std::tuple<arma::cube, arma::mat> return_pair(Qtwin, rotc);
     return return_pair;
 }
-
-arma::mat spinw::arma_basisvector(bool norm){
-
-    double alpha = lattice1.angle[0];
-    double beta  = lattice1.angle[1];
-    double gamma = lattice1.angle[2];
-
-//    arma::vec v1 = {1, 0, 0};
-//    arma::vec v2 = {cos(gamma), sin(gamma), 0};
-//    arma::vec v3(3);
-//
-//    v3(0) = cos(beta);
-//    v3(1) = sin(beta)*(cos(alpha)-cos(beta)*cos(gamma))/(sin(beta)*sin(gamma));
-//    v3(2) = sqrt(sin(beta)*sin(beta) - v3(1)*v3(1));
-    arma::mat thisVector = {
-            {1, cos(gamma), cos(beta)},
-            {0, sin(gamma), sin(beta)*(cos(alpha)-cos(beta)*cos(gamma))/(sin(beta)*sin(gamma))},
-            {0, 0,          sqrt(sin(beta)*sin(beta) - (sin(beta)*(cos(alpha)-cos(beta)*cos(gamma))/(sin(beta)*sin(gamma)) * sin(beta)*(cos(alpha)-cos(beta)*cos(gamma))/(sin(beta)*sin(gamma))))}
-    };
-//    arma::mat thisVector = arma::join_horiz(arma::join_horiz(v1,v2),v3);
-
-    if (!norm) {
-        thisVector = thisVector * arma::diagmat(arma::vec(&(lattice1.lat_const[0]),3,false,true));
-    };
-    return thisVector;
-};
 
 void spinw::initmatrix(struct init_matrix &this_matrix, bool fitmode, bool plotmode, bool sortDM, bool zeroC, bool extend, bool conjugate){
 

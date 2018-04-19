@@ -8,7 +8,8 @@ else()
 endif()
 
 include(DownloadProject.cmake)
-download_project(PROJ                googletest
+download_project(
+        PROJ                googletest
         GIT_REPOSITORY      https://github.com/google/googletest.git
         GIT_TAG             master
         ${UPDATE_DISCONNECTED_IF_AVAILABLE}
@@ -29,15 +30,17 @@ if (CMAKE_VERSION VERSION_LESS 2.8.11)
             "${gmock_SOURCE_DIR}/include")
 endif()
 
-# Trivial example using gtest and gmock
-if (MAKE_IDIVIDUAL)
+# Use gtest and gmock
+if (MAKE_IDIVIDUAL_TESTS)
     add_subdirectory(templates)
     add_subdirectory(swsym)
+    add_subdirectory(additions)
 else()
     project(Testing)
     add_executable(all_test
             templates/templateTest.cpp
             swsym/swsymTest.cpp
+            additions/additionsTest.cpp
             )
     target_link_libraries(all_test
             gtest gmock_main

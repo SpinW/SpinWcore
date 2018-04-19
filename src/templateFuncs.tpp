@@ -4,12 +4,6 @@
 
 #include <armadillo>
 
-
-//template<typename T>
-//T asEvaled(const T &X) {
-//    return X.eval();
-//}
-
 template<typename T>
 arma::Mat<typename T::elem_type>armaModM(const T &X, int n) {
     return X - n*arma::floor(X/n);
@@ -21,7 +15,7 @@ arma::Cube<typename T::elem_type>armaModC(const T &X, int n) {
 }
 
 template<typename T>
-static arma::Cube<typename T::elem_type> permute(const T &cube, int order[]) {
+static arma::Cube<typename T::elem_type> permute(const T &inCube, int order[]) {
     using namespace arma;
 
     int op1 = order[0];
@@ -31,10 +25,10 @@ static arma::Cube<typename T::elem_type> permute(const T &cube, int order[]) {
     int perm = op1 * 100 + op2 * 10 + op3;
 
     if (perm == 123) {
-        return cube;
+        return inCube;
     }
 
-    uword dimension[] = {cube.n_rows, cube.n_cols, cube.n_slices};
+    uword dimension[] = {inCube.n_rows, inCube.n_cols, inCube.n_slices};
 
     uword rows = dimension[op1 - 1];
     uword cols = dimension[op2 - 1];
@@ -44,8 +38,8 @@ static arma::Cube<typename T::elem_type> permute(const T &cube, int order[]) {
     Cube<typename T::elem_type> output(rows, cols, slis, fill::zeros);
 
 #pragma omp parallel for
-    for (int s = 0; s < cube.n_slices; ++s) {
-        auto this_slice = cube.slice(s); // rxc
+    for (int s = 0; s < inCube.n_slices; ++s) {
+        auto this_slice = inCube.slice(s); // rxc
 
         if (op1 == 2 & op2 == 1) {
             if (op3 == 3) { // 2 1 3
@@ -55,7 +49,7 @@ static arma::Cube<typename T::elem_type> permute(const T &cube, int order[]) {
             }
         } else { // [1 2 3] [1 2 3] [1 2 3]
             if (op3 == 1) { // [1 2 3] [1 2 3] [1]
-                for (int r = 0; r < cube.n_rows; ++r) {
+                for (int r = 0; r < inCube.n_rows; ++r) {
                     if (op1 == 2) { // [2] [1 2 3] [1]
                         output.slice(r)(arma::span::all, s) = vectorise(this_slice(r, arma::span::all));
                     } else if (op1 == 3) { // [3] [1 2 3] [1]
@@ -65,7 +59,7 @@ static arma::Cube<typename T::elem_type> permute(const T &cube, int order[]) {
                     }
                 }
             } else if (op3 == 2) { // [1 2 3] [1 2 3] [2]
-                for (int c = 0; c < cube.n_cols; ++c) {
+                for (int c = 0; c < inCube.n_cols; ++c) {
                     if (op2 == 1) { // [1 2 3] [1] [2]
                         output.slice(c)(s, arma::span::all) = this_slice(arma::span::all, c).t();
                     } else if (op2 == 3) { // [1 2 3] [3] [2]
@@ -99,19 +93,19 @@ arma::Mat<typename T::elem_type> mmat(const T &X, const TT &Y, int dim[]) {
     }
 
     if ((dim[0] == 2) & (dim[1] == 1)){
-        nA[0] = X.n_cols; nA[1] = X.n_rows;
+        nA[0] = X.n_cols;  nA[1] = X.n_rows;
         nB[0] = YY.n_cols; nB[1] = YY.n_rows;
     } else{
-        nA[0] = X.n_rows; nA[1] = X.n_cols;
+        nA[0] = X.n_rows;  nA[1] = X.n_cols;
         nB[0] = YY.n_rows; nB[1] = YY.n_cols;
     }
     arma::uword repv[3] = {1, 1, 1};
-    repv[dim[0]-1] = nA[0];
+    repv[dim[0] - 1] = nA[0];
 
     int idx[3];
-    idx[(dim[0]+1)%2] = 3;
-    idx[dim[0]%2]     = dim[0];
-    idx[2]            = dim[1];
+    idx[(dim[0] + 1) % 2] = 3;
+    idx[dim[0] % 2]       = dim[0];
+    idx[2]                = dim[1];
 
     // Create temp and return type.
     arma::Cube<typename T::elem_type>A(X.n_rows, X.n_cols, nB[1], arma::fill::zeros);
@@ -156,11 +150,18 @@ arma::Mat<typename T::elem_type> mmat(const T &X, const TT &Y, int dim[]) {
     return C;
 }
 
-template <typename T> arma::Mat<typename T::elem_type> cmod(T &inMat){
+template <typename T> arma::Mat<typename T::elem_type> cmodM(T &inMat, double toll){
     arma::Mat<typename T::elem_type> retMat = armaModM(inMat,1);
-    retMat = arma::find(retMat > (arma::ones(retMat.n_rows,retMat.n_cols) - retMat)) -= 1;
+    retMat.elem(arma::find(retMat > (arma::ones(retMat.n_rows,retMat.n_cols) - toll))) -= 1;
     return retMat;
 }
+
+template <typename T> arma::Cube<typename T::elem_type> cmodC(T &inCube, double toll){
+    arma::Cube<typename T::elem_type> retCube = armaModC(inCube,1);
+    retCube.elem(arma::find(retCube > (arma::ones(retCube.n_rows,retCube.n_cols, retCube.n_slices) - toll))) -= 1;
+    return retCube;
+}
+
 
 template <typename T> arma::Mat<typename T::elem_type> uniquetol(T inMat, double tol){
 /*
@@ -192,3 +193,58 @@ template <typename T> arma::Mat<typename T::elem_type> uniquetol(T inMat, double
     }
     return unique;
 }
+
+template <typename T> arma::Cube<typename T::elem_type> repCube(T &inCube,int i, int j, int k){
+    // Create the same functionality of repmat, but for cubes.
+    if ((i < 1) || (j < 1) || (k < 1)){
+        throw std::invalid_argument("Expansion variables should be positive.");
+    }
+
+    arma::Cube<typename T::elem_type>
+            retCube(inCube.n_rows*i, inCube.n_cols*j, inCube.n_slices*k);
+
+    for (arma::uword s = 0; s < inCube.n_slices; s++) {
+        // Expand each slice.
+        retCube.slice(s) = arma::repmat(inCube.slice(s), i, j);
+        // Replicate that expanded slice if needed.
+        for (arma::uword sR = 1; sR < k; sR++) {
+            retCube.slice(s + sR * inCube.n_slices) = retCube.slice(s);
+        }
+    }
+    return retCube;
+}
+
+template <typename T> std::tuple<arma::uvec, arma::uvec> isnewUC(T &A, T &B, double toll){
+
+//    arma::uword nA[2] = {A.n_rows, A.n_cols};
+//    arma::uword nB[2] = {B.n_rows, B.n_cols};
+
+    arma::Cube<typename T::elem_type> AC(A.n_rows, A.n_cols,1); AC.slice(0) = A;
+    arma::Cube<typename T::elem_type> BC(B.n_rows, B.n_cols,1); BC.slice(0) = B;
+
+    int perm1[] = {2, 3, 1};
+    int perm2[] = {3, 2, 1};
+
+    AC = permute(AC, perm1);
+    BC = permute(BC, perm2);
+
+    AC = repCube(AC, 1, (int)B.n_cols, 1);
+    BC = repCube(BC, (int)A.n_cols, 1, 1);
+
+    arma::Cube<typename T::elem_type> temp = cmodC(arma::abs(AC - BC),toll);
+    temp %= temp; // Remember element wise multiplication....
+    arma::Mat<typename T::elem_type> preFind = arma::sum(temp,2);
+
+    arma::umat postFind = arma::find(preFind > toll);
+    arma::uvec isNew = arma::all(postFind, 0);
+
+    arma::uvec idx = arma::linspace<arma::uvec>(0, B.n_cols - 1, B.n_cols);
+
+    std::cout << postFind << std::endl << isNew << std::endl;
+    //    symIdx = max(bsxfun(@times,~notequal(:,idx(~isnew)),(1:size(notequal,1))'),[],1);
+
+
+    return std::make_tuple(isNew, idx);
+};
+
+

@@ -44,9 +44,9 @@ double* sw_spinwave(Hspinw* sw, double* qRange, spinwave_opt options){
     }
 }
 
-Hsw_sym* loadsym(char* dat_dir){
+Hsw_sym* loadsym(){
     try{
-        return reinterpret_cast<Hsw_sym*>(new swsym(dat_dir));
+        return reinterpret_cast<Hsw_sym*>(new swsym());
     } catch (const std::exception &e) {
         std::cout << __func__ << ": This has all gone wrong" << std::endl;
         std::cout << e.what() << std::endl;

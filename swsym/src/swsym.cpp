@@ -4,50 +4,63 @@
 
 #include "../include/swsym.h"
 #include "../../include/templateFuncs.h"
+#include "../../include/symmetryDat.h"
 #include <iostream>
 #include <fstream>
 #include <algorithm>
 
 
-swsym::swsym(char* dat_dirPt){
+swsym::swsym() {
 
+    ALL_SYM_DAT loadedSyms = ALL_SYM_DAT();
     symOp = arma::field<arma::cube>(max_sym);
 
     // What file do we want to load?
-    std:: string datDir(dat_dirPt);
-    std::string sym_file("symmetry.dat");
-
-    // Create the filename.
-    std::string symFile = datDir + sym_file;
-
-    int loop = 0;
-    std::string line; //The line taken from the *.txt source
-    std::ifstream symFileStream(symFile); //To read from the *.txt File
-    std::string temp;
-    if (symFileStream.is_open()) {
-        while (! symFileStream.eof() ) //Runs while the file is NOT at the end
-        {
-            if (loop == max_sym){
-                std::cout << "Maximum number of symmetry operations loaded (" << max_sym << ")." << std::endl;
-                break;
-            }
-            getline (symFileStream,line); //Gets a single line
-            if (line.size() == 0){
-                break; // Check if there is a blank line at the end....
-            }
-            symName[loop] = line.substr(6,11);
-            symName[loop].erase(std::remove_if(temp.begin(), temp.end(), ::isspace), temp.end());
-            symStr[loop] = line.substr(19,line.size());
-            arma::cube tempCube(3,4,30,arma::fill::zeros);
-            interpretSymString(tempCube,line.substr(19,line.size()));
-            symOp(loop) = tempCube;
-            loop++;
+//    std:: string datDir(dat_dirPt);
+//    std::string sym_file("symmetry.dat");
+//
+//    // Create the filename.
+//    std::string symFile = datDir + sym_file;
+//
+//    std::string line; //The line taken from the *.txt source
+//    std::ifstream symFileStream(symFile); //To read from the *.txt File
+//    std::string temp;
+//    if (symFileStream.is_open()) {
+//        while (! symFileStream.eof() ) //Runs while the file is NOT at the end
+//        {
+    for (int i = 0; i < loadedSyms.symStrLen; i++) {
+        if (totalSyms == max_sym) {
+            std::cout << "Maximum number of symmetry operations loaded (" << max_sym << ")." << std::endl;
+            break;
         }
-        symFileStream.close();
-    } else {
-        throw std::invalid_argument(std::string("Unable to open dat file"));
-//        std::cout << "Unable to open file:" << std::endl << symFile << std::endl;
+        std::string line = loadedSyms.allStrings[i];
+//            getline (symFileStream,line); //Gets a single line
+        if (line.size() == 0) {
+            break; // Check if there is a blank line at the end....
+        }
+        symName[totalSyms] = line.substr(6, 11);
+//            symName[totalSyms].erase(std::remove_if(temp.begin(), temp.end(), ::isspace), temp.end());
+        symStr[totalSyms] = line.substr(19, line.size());
+        arma::cube tempCube(3, 4, 30, arma::fill::zeros);
+        interpretSymString(tempCube, line.substr(19, line.size()));
+        symOp(totalSyms) = tempCube;
+        totalSyms++;
     }
+//        symFileStream.close();
+//    } else {
+//        throw std::invalid_argument(std::string("Unable to open dat file"));
+////        std::cout << "Unable to open file:" << std::endl << symFile << std::endl;
+//    }
+}
+
+void swsym::addSymString(std::string symStr){
+    arma::cube tempCube(3,4,30,arma::fill::zeros);
+    interpretSymString(tempCube,symStr);
+    char result[100];
+    sprintf(result,"Added_%d",totalSyms);
+    symName[totalSyms] = std::string(result);
+    symOp(totalSyms) = tempCube;
+    totalSyms++;
 }
 
 void swsym::interpretSymString(arma::cube &this_cube, std::string symStr) {

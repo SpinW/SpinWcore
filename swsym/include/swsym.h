@@ -16,17 +16,23 @@ typedef struct Opinfo
 
 
 class swsym{
-//    arma::mat symOp;
-    int max_sym = 300;
-    std::string symStr[300];
-    std::string symName[300];
-protected:
-    arma::field<arma::cube>symOp;
 
 public:
-    explicit swsym(char* dat_dir);
+    int totalSyms = 0;
+    int max_sym = 300;
+
+protected:
+    arma::field<arma::cube>symOp;
+    std::string symStr[300];
+    std::string symName[300];
+
+
+public:
+    explicit swsym();
+    void addSymString(std::string symStr);
     void interpretSymString(arma::cube &this_cube, std::string inString);
     std::tuple<arma::mat, arma::Row<int>> position(arma::mat &r0, int symN, double tol);
+    std::tuple<arma::mat, arma::umat> bond(arma::mat r, const arma::mat &bv, arma::rowvec bond, int symN, double toll);
     arma::cube getSym(int ind){
         return symOp(ind);
     }

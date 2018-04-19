@@ -22,12 +22,12 @@ std::tuple<arma::mat, arma::Row<int>> swsym::position(arma::mat &r0, int symN, d
     for (arma::uword i = 0; i < nAtom; i++) {
         for (arma::uword s = 0; s < thisSym.n_slices; s++) {
             arma::mat mTemp = armaModM(mmat(redThisSym.slice(s), r0(arma::span(), i), order) + addThisSym.slice(s), 1);
-            arma::cube rTemp(mTemp.n_rows, mTemp.n_cols, 1);
-            rTemp.slice(0) = mTemp;
+            arma::cube rTemp(mTemp.memptr(), mTemp.n_rows, mTemp.n_cols, 1);
+//            rTemp.slice(0) = mTemp;
             rTemp = permute(rTemp, perm);
             if (rTemp.n_elem > 3) {
                 rTemp = armaModC(rTemp, 1);
-                arma::find(rTemp > (1 - tol)) -= 1;
+                rTemp.elem(arma::find(rTemp > (1 - tol))) -= 1;
                 rTemp.slice(0) = uniquetol(rTemp.slice(0), tol);
             }
             r = arma::join_rows(r, rTemp.slice(0));

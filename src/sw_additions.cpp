@@ -4,12 +4,6 @@
 
 #include "../include/sw_additions.h"
 
-//template<typename T> T arma_mod(T a, int n)
-//{
-//    return a - n*arma::floor(a/n);
-//}
-
-
 double *sw_qscan(double *qLim) {
 
     size_t array_offset = 2;
@@ -54,3 +48,29 @@ arma::mat arma_sw_qscan(double *qLim) {
     return A;
 };
 
+arma::mat arma_basisvector(lattice lattice1, bool norm){
+
+    double alpha = lattice1.angle[0];
+    double beta  = lattice1.angle[1];
+    double gamma = lattice1.angle[2];
+
+//    arma::vec v1 = {1, 0, 0};
+//    arma::vec v2 = {cos(gamma), sin(gamma), 0};
+//    arma::vec v3(3);
+//
+//    v3(0) = cos(beta);
+//    v3(1) = sin(beta)*(cos(alpha)-cos(beta)*cos(gamma))/(sin(beta)*sin(gamma));
+//    v3(2) = sqrt(sin(beta)*sin(beta) - v3(1)*v3(1));
+
+    arma::mat thisVector = {
+            {1, cos(gamma), cos(beta)},
+            {0, sin(gamma), sin(beta)*(cos(alpha)-cos(beta)*cos(gamma))/(sin(beta)*sin(gamma))},
+            {0, 0,          sqrt(sin(beta)*sin(beta) - (sin(beta)*(cos(alpha)-cos(beta)*cos(gamma))/(sin(beta)*sin(gamma)) * sin(beta)*(cos(alpha)-cos(beta)*cos(gamma))/(sin(beta)*sin(gamma))))}
+    };
+//    arma::mat thisVector = arma::join_horiz(arma::join_horiz(v1,v2),v3);
+
+    if (!norm) {
+        thisVector = thisVector * arma::diagmat(arma::vec(&(lattice1.lat_const[0]),3,false,true));
+    };
+    return thisVector;
+};

@@ -13,7 +13,8 @@ const char actualDir[] = "/MATLAB/mtools/SpinW_Dev/spinw/dat_files/";
 class symResults {
 public:
     int Index = -1;
-    swsym thisSym = swsym(strcpy(tempAdr, string(actualDir).c_str()));
+//    swsym thisSym = swsym(strcpy(tempAdr, string(actualDir).c_str()));
+    swsym thisSym = swsym();
 
     explicit symResults(int ind) {
 
@@ -182,7 +183,7 @@ protected:
 class symPosResults {
 public:
     int Index = -1;
-    swsym thisSym = swsym(strcpy(tempAdr, string(actualDir).c_str()));
+    swsym thisSym = swsym();
     double toll = 1E-4;
 
     explicit symPosResults(int ind) {
@@ -267,13 +268,13 @@ public:
     virtual void TearDown() {}
 };
 
-INSTANTIATE_TEST_CASE_P(SwSym,
-                        SwSymTestClassLoc,
-                        ::testing::Values(actualDir,
-                                          "/MATLAB/mtools/SpinW_Dev/spinw",
-                                          "/test/fail/"
-                        )
-);
+//INSTANTIATE_TEST_CASE_P(SwSym,
+//                        SwSymTestClassLoc,
+//                        ::testing::Values(actualDir,
+//                                          "/MATLAB/mtools/SpinW_Dev/spinw",
+//                                          "/test/fail/"
+//                        )
+//);
 
 INSTANTIATE_TEST_CASE_P(SwSym,
                         SwSymTestClassSym,
@@ -299,23 +300,23 @@ INSTANTIATE_TEST_CASE_P(SwSym,
                         )
 );
 
-TEST_P(SwSymTestClassLoc, testDatLoading) {
-    const char *dir = GetParam();
-    string temp = string(dir);
-    char blah[256];
-    try {
-        swsym thisSym = swsym(strcpy(blah, temp.c_str()));
-    } catch (const std::exception &e) {
-        if (temp == string(actualDir)){
-            EXPECT_THROW({throw;},std::exception);
-        } else {
-            EXPECT_THROW({
-                             EXPECT_STREQ("Unable to open dat file", e.what());
-                             throw;
-                         }, std::exception);
-        }
-    }
-}
+//TEST_P(SwSymTestClassLoc, testDatLoading) {
+//    const char *dir = GetParam();
+//    string temp = string(dir);
+//    char blah[256];
+//    try {
+//        swsym thisSym = swsym(strcpy(blah, temp.c_str()));
+//    } catch (const std::exception &e) {
+//        if (temp == string(actualDir)){
+//            EXPECT_THROW({throw;},std::exception);
+//        } else {
+//            EXPECT_THROW({
+//                             EXPECT_STREQ("Unable to open dat file", e.what());
+//                             throw;
+//                         }, std::exception);
+//        }
+//    }
+//}
 
 TEST_P(SwSymTestClassSym, testDatInterpreting) {
 
@@ -358,6 +359,31 @@ TEST_P(SwSymTestClass, testStrRead) {
     ASSERT_EQ(Expected.size(),Result.size());
     EXPECT_EQ(Result, Expected);
 }
+TEST_P(SwSymTestClass, testStrAdd) {
+    const char *symChar = GetParam();
+    string temp = string(symChar);
+    string thisID = temp.substr(0,3);
+    string thisSymStr = temp.substr(3,temp.length());
+
+    int ID;
+    sscanf(thisID.c_str(), "%d", &ID);
+
+    auto thisResult = symResults(ID);
+
+    thisResult.thisSym.addSymString(thisSymStr);
+    arma::cube Result_C = thisResult.thisSym.getSym(thisResult.thisSym.totalSyms-1);
+    arma::cube Expected_C = thisResult.Expected();
+
+    std::vector<double> Result(Result_C.memptr(),
+                               Result_C.memptr() + Result_C.n_elem);
+
+    std::vector<double> Expected(Expected_C.memptr(),
+                                 Expected_C.memptr() + Expected_C.n_elem);
+
+    ASSERT_EQ(Expected.size(),Result.size());
+    EXPECT_EQ(Result, Expected);
+}
+
 
 TEST_P(SwSymTestClassPos,Position){
     int ID = GetParam();

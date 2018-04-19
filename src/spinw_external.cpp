@@ -3,10 +3,11 @@
 //
 #include <iostream>
 #include "../include/spinw.h"
+#include "../include/sw_additions.h"
 
 double* spinw::basisvector(bool norm) {
 
-    arma::mat thisVector = spinw::arma_basisvector(norm);
+    arma::mat thisVector = arma_basisvector(this->lattice1, norm);
     auto* basisVector = new double[3*3];
     memcpy(basisVector,thisVector.memptr(),sizeof(double)*3*3);
     return basisVector;

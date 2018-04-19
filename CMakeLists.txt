@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.6)
 
 project(SpinW)
 set(DO_TESTS "TRUE")
+set(MAKE_IDIVIDUAL_TESTS "FALSE")
 
 set(CMAKE_CXX_STANDARD 11)
 #Make highly optimised
@@ -45,17 +46,19 @@ include_directories(${MKL_INCLUDE_DIR})
 #endif()
 
 # Make the shared library
-add_library(SpinW SHARED
+add_library(
+        SpinW SHARED
         src/spinw.cpp include/spinw.h
         src/Hspinw.cpp include/Hspinw.h # The main files and C interface
         include/sw_structs.h # Helpful structures
         src/sw_additions.cpp include/sw_additions.h
         src/spinw_external.cpp # Helpful functions
-        swsym/src/swsym.cpp swsym/include/swsym.h # Start of symmetry files
+        swsym/src/swsym.cpp swsym/include/swsym.h # Symmetry files
         swsym/src/position.cpp swsym/include/position.h
+        swsym/src/bond.cpp swsym/include/bond.h
         src/atom.cpp include/atom.h
         src/templateFuncs.tpp include/templateFuncs.h # Template functions
-        )
+        include/symmetryDat.h)
 
 # Link with the required libraries.
 target_link_libraries(SpinW
@@ -64,7 +67,5 @@ target_link_libraries(SpinW
 
 # We can add tests here...
 if(DO_TESTS)
-    message(WARNING "You are using an unsupported compiler! Compilation has only been tested with GCC.")
-    set(MAKE_IDIVIDUAL "FALSE")
     add_subdirectory(tests)
 endif()
