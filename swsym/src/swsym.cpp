@@ -15,42 +15,21 @@ swsym::swsym() {
     ALL_SYM_DAT loadedSyms = ALL_SYM_DAT();
     symOp = arma::field<arma::cube>(max_sym);
 
-    // What file do we want to load?
-//    std:: string datDir(dat_dirPt);
-//    std::string sym_file("symmetry.dat");
-//
-//    // Create the filename.
-//    std::string symFile = datDir + sym_file;
-//
-//    std::string line; //The line taken from the *.txt source
-//    std::ifstream symFileStream(symFile); //To read from the *.txt File
-//    std::string temp;
-//    if (symFileStream.is_open()) {
-//        while (! symFileStream.eof() ) //Runs while the file is NOT at the end
-//        {
     for (int i = 0; i < loadedSyms.symStrLen; i++) {
         if (totalSyms == max_sym) {
-            std::cout << "Maximum number of symmetry operations loaded (" << max_sym << ")." << std::endl;
-            break;
+            throw std::out_of_range("Maximum number of symmetry operations loaded");
         }
         std::string line = loadedSyms.allStrings[i];
-//            getline (symFileStream,line); //Gets a single line
         if (line.size() == 0) {
             break; // Check if there is a blank line at the end....
         }
         symName[totalSyms] = line.substr(6, 11);
-//            symName[totalSyms].erase(std::remove_if(temp.begin(), temp.end(), ::isspace), temp.end());
         symStr[totalSyms] = line.substr(19, line.size());
         arma::cube tempCube(3, 4, 30, arma::fill::zeros);
         interpretSymString(tempCube, line.substr(19, line.size()));
         symOp(totalSyms) = tempCube;
         totalSyms++;
     }
-//        symFileStream.close();
-//    } else {
-//        throw std::invalid_argument(std::string("Unable to open dat file"));
-////        std::cout << "Unable to open file:" << std::endl << symFile << std::endl;
-//    }
 }
 
 void swsym::addSymString(std::string symStr){
@@ -119,5 +98,4 @@ void swsym::interpretSymString(arma::cube &this_cube, std::string symStr) {
     }
     this_cube(arma::span(nNew,nNew), arma::span(0,2), arma::span(nOp,nOp)) = vNew ;
     this_cube.shed_slices(nOp+1,this_cube.n_slices-1);
-//    this_cube(arma::span::all, arma::span::all, arma::span(nOp+1,this_cube.n_slices-1)).fill(NAN);
 }

@@ -31,7 +31,7 @@ public:
     explicit swsym();
     void addSymString(std::string symStr);
     void interpretSymString(arma::cube &this_cube, std::string inString);
-    std::tuple<arma::mat, arma::Row<int>> position(arma::mat &r0, int symN, double tol);
+    std::tuple<arma::mat, arma::urowvec> position(arma::mat &r0, int symN, double tol);
     std::tuple<arma::mat, arma::umat> bond(arma::mat r, const arma::mat &bv, arma::rowvec bond, int symN, double toll);
     arma::cube getSym(int ind){
         return symOp(ind);

@@ -14,7 +14,6 @@ spinw::spinw(lattice latt, unit_cell cell, twin tw, mag_str mag, unit un, char *
     twin1 = tw;
     mag_str1 = mag;
     unit1 = un;
-    dat_dir = dat_folder;
 }
 
 spinw::~spinw(){
@@ -73,6 +72,7 @@ arma::mat spinw::arma_spinwave(double* qRange, spinwave_opt options) {
 
     // Check for 2*km
     float new_toll = 2 * options.toll;
+    //TODO Fix this helical condition.
 //    arma::umat helical = arma::any(
 //            arma::sum(arma::square(arma::abs(arma_mod(arma::abs(2 * km) + new_toll, 1) - new_toll)), 1) > new_toll);
 //    if (options.tid == -2) {

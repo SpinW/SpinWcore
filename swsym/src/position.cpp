@@ -1,7 +1,7 @@
 #include "../include/swsym.h"
 #include "../../include/templateFuncs.h"
 
-std::tuple<arma::mat, arma::Row<int>> swsym::position(arma::mat &r0, int symN, double tol) {
+std::tuple<arma::mat, arma::urowvec> swsym::position(arma::mat &r0, int symN, double tol) {
     /*
      * `[r, aIdx] = swsym.position(r0,sym,tol)`
      * generates all symmetry equivalent atomic positions from a given space group and
@@ -11,7 +11,7 @@ std::tuple<arma::mat, arma::Row<int>> swsym::position(arma::mat &r0, int symN, d
     arma::cube thisSym = symOp(symN);
     arma::mat r;
     arma::uword nAtom = r0.n_cols;
-    arma::Row<int> aIdx;
+    arma::urowvec aIdx;
 
     arma::cube redThisSym = thisSym(arma::span(), arma::span(0, 2), arma::span());
     arma::cube addThisSym = thisSym(arma::span(), arma::span(3, 3), arma::span());
@@ -31,7 +31,7 @@ std::tuple<arma::mat, arma::Row<int>> swsym::position(arma::mat &r0, int symN, d
                 rTemp.slice(0) = uniquetol(rTemp.slice(0), tol);
             }
             r = arma::join_rows(r, rTemp.slice(0));
-            aIdx = arma::join_rows(aIdx, arma::Row<int>(rTemp.n_cols, arma::fill::ones) * i);
+            aIdx = arma::join_rows(aIdx, arma::ones<arma::urowvec>(rTemp.n_cols) * i);
         }
     }
 

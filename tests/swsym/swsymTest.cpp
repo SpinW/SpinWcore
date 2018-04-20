@@ -195,7 +195,7 @@ public:
         }
     }
 
-    std::tuple<arma::mat, arma::Row<int>> Result(arma::mat r0) {
+    std::tuple<arma::mat, arma::urowvec> Result(arma::mat r0) {
         if (Index >= 0){
             return this->thisSym.position(r0,Index,toll);
         } else {
@@ -393,10 +393,10 @@ TEST_P(SwSymTestClassPos,Position){
     auto thisResult = symPosResults(ID);
     thisResult.toll = toll;
     std::tuple<arma::mat, arma::Row<int>> Expected_C = thisResult.Expected();
-    std::tuple<arma::mat, arma::Row<int>> Result_C = thisResult.Result(r0);
+    std::tuple<arma::mat, arma::urowvec> Result_C = thisResult.Result(r0);
 
     arma::mat R1 = get<0>(Result_C);
-    arma::Row<int> R2 = get<1>(Result_C);
+    arma::urowvec R2 = get<1>(Result_C);
 
     arma::mat E1 = get<0>(Expected_C);
     arma::Row<int> E2 = get<1>(Expected_C);

@@ -5,6 +5,8 @@
 #include "../include/swsym.h"
 #include "../../include/templateFuncs.h"
 
+//TODO test these cases...
+
 std::tuple<arma::mat, arma::umat> swsym::bond(arma::mat r,
                                   const arma::mat &bv,
                                   arma::rowvec bond,
@@ -34,10 +36,6 @@ std::tuple<arma::mat, arma::umat> swsym::bond(arma::mat r,
         arma::cube r1TempC(r1Temp.memptr(), r1Temp.n_rows, r1Temp.n_cols, 1);
         arma::cube r2TempC(r1Temp.memptr(), r2Temp.n_rows, r2Temp.n_cols, 1);
         arma::cube dlTempC(dlTemp.memptr(), dlTemp.n_rows, dlTemp.n_cols, 1);
-//
-//        r1TempC.slice(0) = r1Temp;
-//        r2TempC.slice(0) = r2Temp;
-//        dlTempC.slice(0) = dlTemp;
 
         r1TempC = permute(r1TempC, perm);
         r2TempC = permute(r2TempC, perm);
@@ -85,7 +83,6 @@ std::tuple<arma::mat, arma::umat> swsym::bond(arma::mat r,
 
     arma::uword nC = genCP.n_cols;
     arma::cube theseBonds(genCP.memptr(), genCP.n_rows,genCP.n_cols,1);
-//    theseBonds.slice(0) = genCP;
 
     int perm1[] = {2, 3, 1};
     int perm2[] = {3, 2, 1};

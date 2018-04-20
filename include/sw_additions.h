@@ -11,5 +11,4 @@
 double* sw_qscan(double* qLim);
 arma::mat arma_sw_qscan(double* qLim);
 arma::mat arma_basisvector(lattice lattice1, bool norm);
-//template<typename T> T arma_mod(T a, int n);
 #endif //SPINW_SW_ADDITIONS_H

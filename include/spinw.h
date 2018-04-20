@@ -18,7 +18,6 @@ class spinw {
     coupling coupling1;
     mag_str mag_str1;
     unit unit1;
-    std::string dat_dir;
 
 public:
 
