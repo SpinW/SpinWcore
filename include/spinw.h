@@ -27,7 +27,7 @@ public:
     arma::mat arma_spinwave(double* qRange, spinwave_opt options);
     std::tuple<arma::cube, arma::mat> arma_twinq(arma::mat q0, arma::cube rotc);
     void initmatrix(init_matrix &this_matrix, bool fitmode, bool plotmode, bool sortDM, bool zeroC, bool extend, bool conjugate);
-    void matom(matom_struct *this_matom);
+    std::tuple<arma::mat, arma::urowvec, arma::urowvec>atom();
 
     double* spinwave(double* qRange, spinwave_opt options);
     double* basisvector(bool norm);

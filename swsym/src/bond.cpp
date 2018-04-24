@@ -8,16 +8,17 @@
 //TODO test these cases...
 
 std::tuple<arma::mat, arma::umat> swsym::bond(arma::mat r,
-                                  const arma::mat &bv,
-                                  arma::rowvec bond,
+                                  arma::mat bv,
+                                  arma::colvec bond,
                                   int symN,
                                   double toll){
 
     double tolDist = 1e-5;
 
+
     arma::colvec r1 = r(arma::span(),bond(3));
     arma::colvec r2 = r(arma::span(),bond(4));
-    arma::rowvec dl = bond(arma::span(0,2));
+    arma::colvec dl = bond(arma::span(0,2));
 
     arma::cube thisSym = symOp(symN);
     arma::cube redThisSym = thisSym(arma::span(), arma::span(0, 2), arma::span());
@@ -101,4 +102,6 @@ std::tuple<arma::mat, arma::umat> swsym::bond(arma::mat r,
     uniqueB = arma::trimatu(uniqueB) || arma::trimatu(arma::umat(uniqueB.n_rows,uniqueB.n_cols,arma::fill::ones));
 
     return std::make_tuple(genCP,uniqueB);
+
+//    return std::make_tuple(arma::mat(1,1,arma::fill::zeros), arma::umat(1,1,arma::fill::zeros));
 }

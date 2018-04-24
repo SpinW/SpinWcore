@@ -210,10 +210,6 @@ void spinw::initmatrix(struct init_matrix &this_matrix, bool fitmode, bool plotm
     }
 
     struct matom_struct mAtom;
-    matom(&mAtom);
-
-}
-
-void spinw::matom(matom_struct *this_matom){
+    std::tuple<arma::mat, arma::urowvec, arma::urowvec> atomMatom = atom();
 
 }

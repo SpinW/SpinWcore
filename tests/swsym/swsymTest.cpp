@@ -8,7 +8,6 @@
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "TemplateArgumentsIssues"
 using namespace std;
-const char actualDir[] = "/MATLAB/mtools/SpinW_Dev/spinw/dat_files/";
 
 class symResults {
 public:
@@ -412,6 +411,20 @@ TEST_P(SwSymTestClassPos,Position){
 
     EXPECT_EQ(resultPos, expectedPos);
     EXPECT_EQ(resultIdx, expectedIdx);
+}
+
+TEST(SwSymTestBond, Bond){
+arma::mat R  = arma::mat({{0.5, 0, 0.5}, {0, 0.5, 0.5},  {0, 0, 0}});
+arma::mat BV = arma::mat({{6, -3, 0},    {0, 5.1962, 0}, {0, 0, 5}});
+
+// bond is composed of [dl_x, dl_y, dl_z, start_idx, end_idx, number];
+arma::colvec bond = arma::colvec({0, 1, 0, 2, 1, 1});
+
+swsym thisSym = swsym();
+int index = thisSym.searchSym(string("P -3"));
+double toll = 1E-5;
+
+std::tuple<arma::mat, arma::umat> Results =  thisSym.bond(R, BV, bond, index, toll);
 }
 
 #pragma clang diagnostic pop

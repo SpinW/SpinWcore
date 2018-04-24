@@ -53,12 +53,14 @@ add_library(
         include/sw_structs.h # Helpful structures
         src/sw_additions.cpp include/sw_additions.h
         src/spinw_external.cpp # Helpful functions
-        swsym/src/swsym.cpp swsym/include/swsym.h # Symmetry files
+        include/symmetryDat.h # Symmetry files
+        swsym/src/swsym.cpp swsym/include/swsym.h
         swsym/src/position.cpp swsym/include/position.h
         swsym/src/bond.cpp swsym/include/bond.h
+        swsym/src/symOperator.cpp swsym/include/symOperator.h
         src/atom.cpp include/atom.h
         src/templateFuncs.tpp include/templateFuncs.h # Template functions
-        include/symmetryDat.h)
+)
 
 # Link with the required libraries.
 target_link_libraries(SpinW

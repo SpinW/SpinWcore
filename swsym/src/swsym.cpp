@@ -42,6 +42,17 @@ void swsym::addSymString(std::string symStr){
     totalSyms++;
 }
 
+int swsym::searchSym(std::string searchString){
+    int index = -1;
+    for(int x = 0; x < totalSyms; x++){
+        if (symName[x].find(searchString, 0) != std::string::npos){
+            index = x;
+            break;
+        }
+    }
+    return index;
+}
+
 void swsym::interpretSymString(arma::cube &this_cube, std::string symStr) {
     int ii = 0;
     int nNew  = 0;
