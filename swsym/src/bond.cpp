@@ -16,11 +16,11 @@ std::tuple<arma::mat, arma::umat> swsym::bond(arma::mat r,
     double tolDist = 1e-5;
 
 
-    arma::colvec r1 = r(arma::span(),bond(3));
-    arma::colvec r2 = r(arma::span(),bond(4));
+    arma::colvec r1 = r.col(bond(3));
+    arma::colvec r2 = r.col(bond(4));
     arma::colvec dl = bond(arma::span(0,2));
 
-    arma::cube thisSym = symOp(symN);
+    arma::cube thisSym = symOperator(symN);
     arma::cube redThisSym = thisSym(arma::span(), arma::span(0, 2), arma::span());
     arma::cube addThisSym = thisSym(arma::span(), arma::span(3, 3), arma::span());
 
@@ -56,16 +56,16 @@ std::tuple<arma::mat, arma::umat> swsym::bond(arma::mat r,
         r2New = arma::join_rows(r2New,r2TempC.slice(0));
         dlNew = arma::join_rows(dlNew,dlTempC.slice(0));
     }
-    std::tuple<arma::uvec, arma::uvec> atom1 = isnewUC(r,r1New,tolDist);
-    arma::uvec atom1Select = std::get<1>(atom1);
+    std::tuple<arma::urowvec, arma::uvec> thisAtom1 = isnewUC(r,r1New,tolDist);
+    arma::uvec atom1Select = std::get<1>(thisAtom1);
 
-    if (arma::any(std::get<0>(atom1))){
+    if (arma::any(std::get<0>(thisAtom1))){
         throw std::runtime_error("The generated positions for atom1 are wrong!");
     }
 
-    std::tuple<arma::uvec, arma::uvec> atom2 = isnewUC(r,r2New,tolDist);
-    arma::uvec atom2Select = std::get<1>(atom2);
-    if (arma::any(std::get<0>(atom2))){
+    std::tuple<arma::urowvec, arma::uvec> thisAtom2 = isnewUC(r,r2New,tolDist);
+    arma::uvec atom2Select = std::get<1>(thisAtom2);
+    if (arma::any(std::get<0>(thisAtom2))){
         throw std::runtime_error("The generated positions for atom2 are wrong!");
     }
 

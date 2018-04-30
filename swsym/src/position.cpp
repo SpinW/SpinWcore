@@ -23,7 +23,6 @@ std::tuple<arma::mat, arma::urowvec> swsym::position(arma::mat &r0, int symN, do
         for (arma::uword s = 0; s < thisSym.n_slices; s++) {
             arma::mat mTemp = armaModM(mmat(redThisSym.slice(s), r0(arma::span(), i), order) + addThisSym.slice(s), 1);
             arma::cube rTemp(mTemp.memptr(), mTemp.n_rows, mTemp.n_cols, 1);
-//            rTemp.slice(0) = mTemp;
             rTemp = permute(rTemp, perm);
             if (rTemp.n_elem > 3) {
                 rTemp = armaModC(rTemp, 1);

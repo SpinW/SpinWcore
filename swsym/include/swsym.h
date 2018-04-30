@@ -39,6 +39,7 @@ public:
 
     int searchSym(std::string searchString);
     arma::cube symOperator(int symNumber);
+    int oporder(arma::mat symOP);
 };
 
 #endif //SPINW_SWSYM_H
