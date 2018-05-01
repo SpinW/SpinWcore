@@ -19,15 +19,19 @@ class spinw {
     mag_str mag_str1;
     unit unit1;
 
+private:
+    matom_struct mag_cache;
+
 public:
 
-    explicit spinw(lattice latt, unit_cell cell, twin tw, mag_str mag, unit un, char *dat_folder);
+    explicit spinw(lattice latt, unit_cell cell, twin tw, mag_str mag, unit un);
     ~spinw();
 
     arma::mat arma_spinwave(double* qRange, spinwave_opt options);
     std::tuple<arma::cube, arma::mat> arma_twinq(arma::mat q0, arma::cube rotc);
-    void initmatrix(init_matrix &this_matrix, bool fitmode, bool plotmode, bool sortDM, bool zeroC, bool extend, bool conjugate);
-    std::tuple<arma::mat, arma::urowvec, arma::urowvec>atom();
+    void intmatrix(init_matrix &this_matrix, bool fitmode, bool plotmode, bool sortDM, bool zeroC, bool extend, bool conjugate);
+    std::tuple<arma::mat, arma::urowvec, arma::urowvec> atom();
+    void matom();
 
     double* spinwave(double* qRange, spinwave_opt options);
     double* basisvector(bool norm);

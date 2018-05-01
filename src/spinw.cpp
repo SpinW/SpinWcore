@@ -8,7 +8,7 @@
 
 #define PI 3.14159265
 
-spinw::spinw(lattice latt, unit_cell cell, twin tw, mag_str mag, unit un, char *dat_folder) {
+spinw::spinw(lattice latt, unit_cell cell, twin tw, mag_str mag, unit un) {
     lattice1 = latt;
     unit_cell1 =cell;
     twin1 = tw;
@@ -166,7 +166,7 @@ arma::mat spinw::arma_spinwave(double* qRange, spinwave_opt options) {
     // magnetic unit cell.
     struct init_matrix this_return;
 //    void spinw::initmatrix(struct init_matrix *this_matrix, bool fitmode, bool plotmode, bool sortDM, bool zeroC, bool extend, bool conjugate)
-    initmatrix(this_return, true, false, false, false, false, true);
+    intmatrix(this_return, true, false, false, false, false, true);
 
 
 //
@@ -199,17 +199,4 @@ std::tuple<arma::cube,arma::mat> spinw::arma_twinq(arma::mat q0, arma::cube rotc
 
     std::tuple<arma::cube, arma::mat> return_pair(Qtwin, rotc);
     return return_pair;
-}
-
-void spinw::initmatrix(struct init_matrix &this_matrix, bool fitmode, bool plotmode, bool sortDM, bool zeroC, bool extend, bool conjugate){
-
-    arma::rowvec nExt0 = {(double)mag_str1.nExt[0],(double)mag_str1.nExt[1],(double)mag_str1.nExt[2]};
-
-    if (arma::sum(nExt0) == 3){
-        extend = false;
-    }
-
-    struct matom_struct mAtom;
-    std::tuple<arma::mat, arma::urowvec, arma::urowvec> atomMatom = atom();
-
 }

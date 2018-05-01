@@ -49,6 +49,8 @@ include_directories(${MKL_INCLUDE_DIR})
 add_library(
         SpinW SHARED
         src/spinw.cpp include/spinw.h
+        src/atom.cpp include/atom.h
+        src/intmatrix.cpp include/intmatrix.h
         src/Hspinw.cpp include/Hspinw.h # The main files and C interface
         include/sw_structs.h # Helpful structures
         src/sw_additions.cpp include/sw_additions.h
@@ -58,9 +60,9 @@ add_library(
         swsym/src/position.cpp swsym/include/position.h
         swsym/src/bond.cpp swsym/include/bond.h
         swsym/src/symOperator.cpp swsym/include/symOperator.h
-        src/atom.cpp include/atom.h
+        swsym/src/oporder.cpp swsym/include/oporder.h
         src/templateFuncs.tpp include/templateFuncs.h # Template functions
-        swsym/src/oporder.cpp swsym/include/oporder.h)
+        )
 
 # Link with the required libraries.
 target_link_libraries(SpinW

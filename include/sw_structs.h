@@ -51,11 +51,11 @@ typedef struct single_ion{
 } single_ion;
 
 typedef struct coupling{
-    int dl[3][2000];
-    int atom1[1000];
-    int atom2[1000];
+    double dl[3][2000];
+    double atom1[1000];
+    double atom2[1000];
     int mat_idx[3][1000];
-    int idx[1000];
+    double idx[1000];
     int type[3][1000];
     int sym[3][1000];
     double rdip;
@@ -103,34 +103,34 @@ typedef struct spinwave_opt{
 #endif
 }spinwave_opt;
 
-typedef struct SS{
-    double iso;
-    double ani;
-    double dm;
-    double gen;
-    double bq;
-    double dip;
+# ifdef __cplusplus
+typedef struct matom_struct{
+    arma::mat r;
+    arma::rowvec idx;
+    arma::rowvec S;
+}matom_struct;
 
+typedef struct SS{
+    arma::mat iso;
+    arma::mat ani;
+    arma::mat dm;
+    arma::mat gen;
+    arma::mat bq;
+    arma::mat dip;
 }SS;
 
 typedef struct SI{
-    double aniso;
-    double g;
-    double field;
+    arma::cube aniso;
+    arma::mat g;
+    arma::rowvec field;
 }SI;
 
 typedef struct init_matrix{
     struct SS SS;
     struct SI SI;
-    double RR[100][100];
+    arma::mat RR;
 }init_matrix;
 
-typedef struct matom_struct{
-    double r[3][100];
-    int idx[100];
-    double S[100];
-    int nMatom;
-
-}matom_struct;
+#endif
 
 #endif //SPINW_SW_STRUCTS_H

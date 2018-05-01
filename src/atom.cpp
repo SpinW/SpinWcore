@@ -6,14 +6,33 @@
 #include "../swsym/include/swsym.h"
 
 std::tuple<arma::mat, arma::urowvec, arma::urowvec> spinw::atom() {
- swsym thisSym = swsym();
- arma::mat thisR(&(unit_cell1.r[0][0]),3,unit_cell1.nAtom);
- std::tuple<arma::mat, arma::urowvec> thesePos = thisSym.position(thisR,lattice1.nSymOp,1E-4);
+    // Return r, idx, mag.
 
- arma::urowvec theseInds = std::get<1>(thesePos);
+    swsym thisSym = swsym();
+    arma::mat thisR(&(unit_cell1.r[0][0]), 3, unit_cell1.nAtom);
+    std::tuple<arma::mat, arma::urowvec> thesePos = thisSym.position(thisR, lattice1.nSymOp, 1E-4);
 
- arma::rowvec S(&(unit_cell1.S[0]),unit_cell1.nAtom);
- arma::urowvec magIDS = S(theseInds) > 0;
+    arma::urowvec theseInds = std::get<1>(thesePos);
 
- return std::make_tuple(std::get<0>(thesePos),theseInds,magIDS);
- }
+    arma::rowvec S(&(unit_cell1.S[0]), unit_cell1.nAtom);
+    arma::urowvec magIDS = arma::find(S(theseInds) > 0);
+
+    return std::make_tuple(std::get<0>(thesePos), theseInds, magIDS);
+}
+
+void spinw::matom() {
+
+    if (mag_cache.idx.is_empty()){
+
+    // Return r, idx, S.
+    std::tuple<arma::mat, arma::urowvec, arma::urowvec> theseAtoms = atom();
+
+    arma::mat thisR = std::get<0>(theseAtoms);
+    arma::rowvec S(&(unit_cell1.S[0]), unit_cell1.nAtom);
+    arma::urowvec idx = std::get<1>(theseAtoms);
+
+    mag_cache.r = thisR.cols(std::get<2>(theseAtoms));
+    mag_cache.idx = idx.cols(std::get<2>(theseAtoms));
+    mag_cache.S = S.cols(std::get<2>(theseAtoms));
+    }
+}
