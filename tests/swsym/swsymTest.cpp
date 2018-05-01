@@ -414,17 +414,41 @@ TEST_P(SwSymTestClassPos,Position){
 }
 
 TEST(SwSymTestBond, Bond){
-arma::mat R  = arma::mat({{0.5, 0, 0.5}, {0, 0.5, 0.5},  {0, 0, 0}});
-arma::mat BV = arma::mat({{6, -3, 0},    {0, 5.1962, 0}, {0, 0, 5}});
+    arma::mat R  = arma::mat({{0.5, 0, 0.5}, {0, 0.5, 0.5},  {0, 0, 0}});
+    arma::mat BV = arma::mat({{6, -3, 0},    {0, 5.1962, 0}, {0, 0, 5}});
+
+    arma::mat E1 = { {0,  0, 0, 0, 1, -1},
+                     {1, -1, 0, 0, 0,  0},
+                     {0,  0, 0, 0, 0,  0},
+                     {2,  0, 1, 2, 0,  1},
+                     {0,  1, 2, 0, 1,  2}};
+
+    arma::urowvec E2 = {1, 1, 1, 1, 1, 1};
 
 // bond is composed of [dl_x, dl_y, dl_z, start_idx, end_idx, number];
-arma::colvec bond = arma::colvec({0, 1, 0, 2, 1, 1});
+    arma::colvec bond = arma::colvec({0, 1, 0, 2, 0, 1});
 
-swsym thisSym = swsym();
-int index = thisSym.searchSym(string("P -3"));
-double toll = 1E-5;
+    swsym thisSym = swsym();
+    int index = thisSym.searchSym(string("P -3"));
+    double toll = 1E-5;
 
-std::tuple<arma::mat, arma::umat> Results =  thisSym.bond(R, BV, bond, index, toll);
+    std::tuple<arma::mat, arma::urowvec> Results =  thisSym.bond(R, BV, bond, index, toll);
+
+    arma::mat R1 = std::get<0>(Results);
+    arma::urowvec R2 = std::get<1>(Results);
+
+    std::vector<double> resultBond(R1.memptr(), R1.memptr() + R1.n_elem);
+    std::vector<double> expectedBond(E1.memptr(), E1.memptr() + E1.n_elem);
+
+    std::vector<arma::uword> resultIdx(R2.memptr(), R2.memptr() + R2.n_elem);
+    std::vector<arma::uword> expectedIdx(E2.memptr(), E2.memptr() + E2.n_elem);
+
+    ASSERT_EQ(R1.size(),E1.size());
+    ASSERT_EQ(R2.size(),E2.size());
+
+    EXPECT_EQ(resultBond, expectedBond);
+    EXPECT_EQ(resultIdx, expectedIdx);
+
 }
 
 #pragma clang diagnostic pop

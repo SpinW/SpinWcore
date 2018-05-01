@@ -158,7 +158,10 @@ template <typename T> arma::Mat<typename T::elem_type> cmodM(T &inMat, double to
 
 template <typename T> arma::Cube<typename T::elem_type> cmodC(T &inCube, double toll){
     arma::Cube<typename T::elem_type> retCube = armaModC(inCube,1);
-    retCube.elem(arma::find(retCube > (arma::ones(retCube.n_rows,retCube.n_cols, retCube.n_slices) - toll))) -= 1;
+    arma::umat indices = arma::find(retCube > (1 - toll));
+    if (indices.n_elem > 0) {
+        retCube.elem(arma::find(retCube > (1 - toll))) -= 1;
+    }
     return retCube;
 }
 
@@ -214,13 +217,10 @@ template <typename T> arma::Cube<typename T::elem_type> repCube(T &inCube,int i,
     return retCube;
 }
 
-template <typename T> std::tuple<arma::uvec, arma::uvec> isnewUC(T &A, T &B, double toll){
+template <typename T, typename TT> std::tuple<arma::urowvec, arma::urowvec> isnewUC(T &A, TT &B, double toll){
 
-//    arma::uword nA[2] = {A.n_rows, A.n_cols};
-//    arma::uword nB[2] = {B.n_rows, B.n_cols};
-
-    arma::Cube<typename T::elem_type> AC(A.n_rows, A.n_cols,1); AC.slice(0) = A;
-    arma::Cube<typename T::elem_type> BC(B.n_rows, B.n_cols,1); BC.slice(0) = B;
+    arma::Cube<typename T::elem_type> AC(A.memptr(), A.n_rows, A.n_cols, 1);
+    arma::Cube<typename T::elem_type> BC(B.memptr(), B.n_rows, B.n_cols, 1);
 
     int perm1[] = {2, 3, 1};
     int perm2[] = {3, 2, 1};
@@ -231,18 +231,21 @@ template <typename T> std::tuple<arma::uvec, arma::uvec> isnewUC(T &A, T &B, dou
     AC = repCube(AC, 1, (int)B.n_cols, 1);
     BC = repCube(BC, (int)A.n_cols, 1, 1);
 
-    arma::Cube<typename T::elem_type> temp = cmodC(arma::abs(AC - BC),toll);
+    arma::cube temp = cmodC(arma::abs(AC - BC),toll);
     temp %= temp; // Remember element wise multiplication....
-    arma::Mat<typename T::elem_type> preFind = arma::sum(temp,2);
+    arma::mat preFind = arma::sum(temp, 2);
 
-    arma::umat postFind = arma::find(preFind > toll);
-    arma::uvec isNew = arma::all(postFind, 0);
+//    preFind.elem(arma::find(preFind > toll)).ones();
+//    preFind.elem(arma::find(preFind < toll)).zeros();
+    preFind.transform( [toll](double val) { return (val < toll) ? double(0) : double(1); } );
+    arma::urowvec isNew = arma::all(preFind > 0, 0);
 
-    arma::uvec idx = arma::linspace<arma::uvec>(0, B.n_cols - 1, B.n_cols);
-
-    std::cout << postFind << std::endl << isNew << std::endl;
-    //    symIdx = max(bsxfun(@times,~notequal(:,idx(~isnew)),(1:size(notequal,1))'),[],1);
-
+    arma::umat postFind = arma::conv_to<arma::umat>::from(arma::abs(preFind - 1));
+    arma::ucolvec thisLS =  arma::linspace<arma::ucolvec>(0, postFind.n_rows -1, postFind.n_rows);
+    arma::urowvec idx = arma::sum(
+            postFind.each_col([thisLS](arma::ucolvec &C){
+                C %= thisLS;
+            }), 0);
 
     return std::make_tuple(isNew, idx);
 };
