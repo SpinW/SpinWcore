@@ -31,7 +31,7 @@ public:
     std::tuple<arma::cube, arma::mat> arma_twinq(arma::mat q0, arma::cube rotc);
     void intmatrix(init_matrix &this_matrix, bool fitmode, bool plotmode, bool sortDM, bool zeroC, bool extend, bool conjugate);
     std::tuple<arma::mat, arma::urowvec, arma::urowvec> atom();
-    void matom();
+    matom_struct matom();
 
     double* spinwave(double* qRange, spinwave_opt options);
     double* basisvector(bool norm);

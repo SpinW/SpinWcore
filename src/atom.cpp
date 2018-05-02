@@ -20,7 +20,7 @@ std::tuple<arma::mat, arma::urowvec, arma::urowvec> spinw::atom() {
     return std::make_tuple(std::get<0>(thesePos), theseInds, magIDS);
 }
 
-void spinw::matom() {
+matom_struct spinw::matom() {
 
     if (mag_cache.idx.is_empty()){
 
@@ -28,11 +28,14 @@ void spinw::matom() {
     std::tuple<arma::mat, arma::urowvec, arma::urowvec> theseAtoms = atom();
 
     arma::mat thisR = std::get<0>(theseAtoms);
-    arma::rowvec S(&(unit_cell1.S[0]), unit_cell1.nAtom);
-    arma::urowvec idx = std::get<1>(theseAtoms);
+    arma::rowvec thisS(&(unit_cell1.S[0]), unit_cell1.nAtom);
+    arma::urowvec thisIdx = std::get<1>(theseAtoms);
+    arma::urowvec magIDS = std::get<2>(theseAtoms);
 
-    mag_cache.r = thisR.cols(std::get<2>(theseAtoms));
-    mag_cache.idx = idx.cols(std::get<2>(theseAtoms));
-    mag_cache.S = S.cols(std::get<2>(theseAtoms));
+    mag_cache.r   = thisR.cols(magIDS);
+    mag_cache.idx = thisIdx(magIDS);
+    mag_cache.S   = thisS(magIDS);
     }
+
+    return mag_cache;
 }

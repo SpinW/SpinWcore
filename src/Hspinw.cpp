@@ -10,9 +10,9 @@ extern "C" {
     #include "../include/Hspinw.h"
 }
 
-Hspinw* create_sw(lattice lat, unit_cell cell, twin tw, mag_str mag, unit un, char* dat_dir){
+Hspinw* create_sw(lattice lat, unit_cell cell, twin tw, mag_str mag, unit un){
     try {
-        return reinterpret_cast<Hspinw*>(new spinw(lat, cell, tw, mag, un, dat_dir));
+        return reinterpret_cast<Hspinw*>(new spinw(lat, cell, tw, mag, un));
     } catch (const std::exception &e) {
         std::cout << __func__ << "This has all gone wrong" << std::endl;
     }

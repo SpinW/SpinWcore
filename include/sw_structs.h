@@ -59,7 +59,7 @@ typedef struct coupling{
     int type[3][1000];
     int sym[3][1000];
     double rdip;
-    int nsym;
+    int nSym;
     int nBond;
 } coupling;
 
@@ -106,7 +106,7 @@ typedef struct spinwave_opt{
 # ifdef __cplusplus
 typedef struct matom_struct{
     arma::mat r;
-    arma::rowvec idx;
+    arma::urowvec idx;
     arma::rowvec S;
 }matom_struct;
 
@@ -121,7 +121,7 @@ typedef struct SS{
 
 typedef struct SI{
     arma::cube aniso;
-    arma::mat g;
+    arma::cube g;
     arma::rowvec field;
 }SI;
 

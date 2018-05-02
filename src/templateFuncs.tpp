@@ -251,3 +251,35 @@ template <typename T, typename TT> std::tuple<arma::urowvec, arma::urowvec> isne
 };
 
 
+template <typename T, typename TT> arma::Cube<typename T::elem_type> cubeSlice(T &inCube, TT &someVec){
+    using namespace arma;
+
+    uvec gTh1  = find(someVec > 1);
+
+    bool isLogical = false;
+    if (gTh1.n_elem > 0 && someVec.n_elem != inCube.n_slices) {
+        isLogical = true;
+    }
+
+    Cube<typename T::elem_type> outCube;
+
+    if (isLogical){
+        outCube = Cube<typename T::elem_type>(inCube.n_rows, inCube.n_cols, gTh1.n_elem);
+        uword i = 0;
+        for (uword s = 0; s < someVec.n_elem; s++){
+            if (someVec(s) == 1){
+                outCube.slice(i) = inCube.slice(s);
+                i++;
+            }
+        }
+
+    } else{
+        outCube = Cube<typename T::elem_type>(inCube.n_rows, inCube.n_cols, someVec.n_elem);
+        for (uword s = 0; s < someVec.n_elem; s++){
+            outCube.slice(someVec(s)) = inCube.slice(someVec(s));
+        }
+    }
+
+    return outCube;
+};
+
