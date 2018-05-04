@@ -8,13 +8,6 @@
 #include <armadillo>
 #include <string>
 
-typedef struct Opinfo
-{
-    bool ismoved;
-    bool opmove ;
-} Opinfo;
-
-
 class swsym{
 
 public:
@@ -32,6 +25,7 @@ public:
     void addSymString(std::string symStr);
     void interpretSymString(arma::cube &this_cube, std::string inString);
     std::tuple<arma::mat, arma::urowvec> position(arma::mat &r0, int symN, double tol);
+    std::tuple<arma::mat, arma::urowvec> positionExpand(arma::mat &r0, int symN, double tol);
     std::tuple<arma::mat, arma::urowvec> bond(arma::mat r, arma::mat bv, arma::colvec bond, int symN, double toll);
     arma::cube getSym(int ind){
         return symOp(ind);
@@ -40,6 +34,8 @@ public:
     int searchSym(std::string searchString);
     arma::cube symOperator(int symNumber);
     int oporder(arma::mat symOP);
+private:
+    std::tuple<arma::mat, arma::urowvec> positionSym(arma::mat &r0, arma::cube &thisSym, double tol);
 };
 
 #endif //SPINW_SWSYM_H

@@ -35,13 +35,14 @@ if (MAKE_IDIVIDUAL_TESTS)
     add_subdirectory(templates)
     add_subdirectory(swsym)
     add_subdirectory(additions)
+    add_subdirectory(spinw_core)
 else()
     project(Testing)
     add_executable(all_test
             templates/templateTest.cpp
             swsym/swsymTest.cpp
             additions/additionsTest.cpp
-            )
+            spinw_core/swcore_atom.cpp)
     target_link_libraries(all_test
             gtest gmock_main
             SpinW
