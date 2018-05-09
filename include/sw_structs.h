@@ -8,21 +8,21 @@
 typedef struct lattice {
     double angle[3];
     double lat_const[3];
-    double sym[3][4][100]; // We have up to 100 symmetry operations..
+    double sym[3*4*100]; // We have up to 100 symmetry operations..
     double origin[3];
     char* label;
     int nSymOp;
 } lattice;
 
 typedef struct unit_cell{
-    double r[3][100];// We have up to 100 atoms in the unit cell..
+    double r[3*100];// We have up to 100 atoms in the unit cell..
     double S[100];
     char** label;
-    int color[3][100];
+    int color[3*100];
     double ox[100];
     double occ[100];
-    double b[2][100];
-    double ff[2][11][100];
+    double b[2*100];
+    double ff[2*11*100];
     int A[100];
     int Z[100];
     double biso[100];
@@ -31,13 +31,13 @@ typedef struct unit_cell{
 
 typedef struct twin {
     double vol[10]; // We have up to 10 twins
-    double rotc[3][3][10];
+    double rotc[3*3*10];
     int nTwin;
 } twin;
 
 typedef struct matrix{
-    double mat[3][3][100]; // Up to 100 magnetic atoms
-    int color[3][100];
+    double mat[3*3*100]; // Up to 100 magnetic atoms
+    int color[3*100];
     char** label;
     int nMat;
 } matrix;
@@ -51,22 +51,22 @@ typedef struct single_ion{
 } single_ion;
 
 typedef struct coupling{
-    double dl[3][2000];
+    double dl[3*1000];
     double atom1[1000];
     double atom2[1000];
-    int mat_idx[3][1000];
+    int mat_idx[3*1000];
     double idx[1000];
-    int type[3][1000];
-    int sym[3][1000];
+    int type[3*1000];
+    int sym[3*1000];
     double rdip;
     int nSym;
     int nBond;
 } coupling;
 
 typedef struct mag_str{
-    double F_real[3][1000][10];
-    double F_imag[3][1000][10];
-    double k[3][10];
+    double F_real[3*1000*10];
+    double F_imag[3*1000*10];
+    double k[3*10];
     int nExt[3];
     int nMagExt;
     int nK;
@@ -78,7 +78,7 @@ typedef struct unit{
     double mu0;
     char** label;
     double nformula;
-    double qmat[3][3];
+    double qmat[3*3];
 }unit;
 
 typedef struct spinwave_opt{
@@ -117,6 +117,7 @@ typedef struct SS{
     arma::mat gen;
     arma::mat bq;
     arma::mat dip;
+    arma::mat all;
 }SS;
 
 typedef struct SI{
@@ -130,6 +131,18 @@ typedef struct init_matrix{
     struct SI SI;
     arma::mat RR;
 }init_matrix;
+
+typedef struct JJstruct{
+    arma::mat idx;
+    arma::mat sym;
+    arma::cube mat;
+    arma::mat type;
+    arma::mat iso;
+    arma::mat bq;
+    arma::mat ani;
+    arma::mat dm;
+    arma::mat gen;
+}JJstruct;
 
 #endif
 

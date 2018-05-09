@@ -6,6 +6,9 @@ std::tuple<arma::mat, arma::urowvec> swsym::position(arma::mat &r0, int symN, do
      * `[r, aIdx] = swsym.position(r0,sym,tol)`
      * generates all symmetry equivalent atomic positions from a given space group and
      * coordinates of the symmetry inequivalent atoms.
+     *
+     * This is equivalent to calling
+     * swsym.position(swsym.generator(SYM),R0)
      */
 
     arma::cube thisSym = symOp(symN);
@@ -45,7 +48,8 @@ std::tuple<arma::mat, arma::urowvec> swsym::positionSym(arma::mat &r0, arma::cub
         }
 
         r = arma::join_rows(r, thisRTemp);
-        aIdx = arma::join_rows(aIdx, arma::ones<arma::urowvec>(thisRTemp.n_cols) * i);
+        // Notice i+1 so we are in the same formalism as SpinW
+        aIdx = arma::join_rows(aIdx, arma::ones<arma::urowvec>(thisRTemp.n_cols) * (i+1));
     }
 
     return std::make_tuple(r, aIdx);
@@ -57,6 +61,9 @@ std::tuple<arma::mat, arma::urowvec> swsym::positionExpand(arma::mat &r0, int sy
      * `[r, aIdx] = swsym.position(r0,sym,tol)`
      * generates all symmetry equivalent atomic positions from a given space group and
      * coordinates of the symmetry inequivalent atoms.
+     *
+     * This is equivalent to calling
+     * swsym.position(swsym.operator(swsym.generator(SYM)),R0)
      */
 
     arma::cube thisSym = symOperator(symN);

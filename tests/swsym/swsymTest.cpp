@@ -12,7 +12,6 @@ using namespace std;
 class symResults {
 public:
     int Index = -1;
-//    swsym thisSym = swsym(strcpy(tempAdr, string(actualDir).c_str()));
     swsym thisSym = swsym();
 
     explicit symResults(int ind) {
@@ -172,10 +171,6 @@ public:
         }
         return temp;
     }
-
-
-protected:
-    char tempAdr[256];
 };
 
 
@@ -207,36 +202,32 @@ public:
         arma::Row<int> idx;
         switch (Index) {
             case 14:
-                temp = arma::mat({{0.5000, 0, 0, 0.6000, 0.9000, 0.9000},
-                                  {0.5000, 0, 0, 0.6000, 0.1000, 0.9000},
-                                  {0, 0.5000, 0, 0, 0.5000, 0}});
-                idx = arma::Row<int>({0, 0, 0, 1, 1, 1});
+                temp = arma::mat({{0.5000, 0,      0, 0.6000, 0.9000, 0.9000},
+                                  {0.5000, 0,      0, 0.6000, 0.1000, 0.9000},
+                                  {0,      0.5000, 0, 0,      0.5000, 0}});
+                idx = arma::Row<int>({0, 0, 0, 1, 1, 1}) +1;
                 break;
             case 2:
                 temp = arma::mat({{0, 0.9000},
                                   {0, 0.1000},
                                   {0, 0}});
-                idx = arma::Row<int>({0, 1});
+                idx = arma::Row<int>({0, 1}) + 1;
                 break;
             case 89:
-                temp = arma::mat({{0, 0.5, 0.5, 0.9, 0.4, 0.4},
-                                  {0, 0.5, 0.5, 0.9, 0.6, 0.6},
-                                  {0, 0, 0, 0, 0, 0}});
-                idx = arma::Row<int>({0, 0, 0, 1, 1, 1});
+                temp = arma::mat({{0, 0.5, 0.9, 0.4},
+                                  {0, 0.5, 0.9, 0.6},
+                                  {0, 0,   0,   0}});
+                idx = arma::Row<int>({0, 0, 1, 1}) +1;
                 break;
             case 4:
                 temp = arma::mat({{0.5, 0, 0.6, 0.9},
                                   {0.5, 0, 0.6, 0.1},
                                   {0, 0, 0, 0}});
-                idx = arma::Row<int>({0, 0, 1, 1});
+                idx = arma::Row<int>({0, 0, 1, 1}) +1;
                 break;
         }
         return make_tuple(temp,idx);
     }
-
-
-protected:
-    char tempAdr[256];
 };
 
 // A new one of these is create for each test
@@ -267,14 +258,6 @@ public:
     virtual void TearDown() {}
 };
 
-//INSTANTIATE_TEST_CASE_P(SwSym,
-//                        SwSymTestClassLoc,
-//                        ::testing::Values(actualDir,
-//                                          "/MATLAB/mtools/SpinW_Dev/spinw",
-//                                          "/test/fail/"
-//                        )
-//);
-
 INSTANTIATE_TEST_CASE_P(SwSym,
                         SwSymTestClassSym,
                         ::testing::Values(symResults(0),
@@ -298,24 +281,6 @@ INSTANTIATE_TEST_CASE_P(SwSym,
                                 "140x+1/2,y+1/2,z+1/2; -x+1/2,-y,z+1/2; -y+1/4,x+3/4,z+1/4; -x+1/2,y,-z+1/2; -x,-y,-z"
                         )
 );
-
-//TEST_P(SwSymTestClassLoc, testDatLoading) {
-//    const char *dir = GetParam();
-//    string temp = string(dir);
-//    char blah[256];
-//    try {
-//        swsym thisSym = swsym(strcpy(blah, temp.c_str()));
-//    } catch (const std::exception &e) {
-//        if (temp == string(actualDir)){
-//            EXPECT_THROW({throw;},std::exception);
-//        } else {
-//            EXPECT_THROW({
-//                             EXPECT_STREQ("Unable to open dat file", e.what());
-//                             throw;
-//                         }, std::exception);
-//        }
-//    }
-//}
 
 TEST_P(SwSymTestClassSym, testDatInterpreting) {
 
@@ -395,7 +360,7 @@ TEST_P(SwSymTestClassPos,Position){
     std::tuple<arma::mat, arma::urowvec> Result_C = thisResult.Result(r0);
 
     arma::mat R1 = get<0>(Result_C);
-    arma::urowvec R2 = get<1>(Result_C);
+    arma::Row<int> R2 = arma::conv_to<arma::Row<int>>::from(get<1>(Result_C));
 
     arma::mat E1 = get<0>(Expected_C);
     arma::Row<int> E2 = get<1>(Expected_C);

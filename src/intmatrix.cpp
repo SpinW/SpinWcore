@@ -16,12 +16,13 @@ void spinw::intmatrix(struct init_matrix &this_matrix, bool fitmode, bool plotmo
         extend = false;
     }
 
-    matom_struct mAtom = mag_cache;
+    matom_struct mAtom = matom();
     arma::uword nMagAtom = mAtom.r.n_cols;
-    arma::cube thisMat(&(matrix1.mat[0][0][0]), 3, 3, matrix1.nMat + 2); //Memory overflow....
+    arma::cube thisMat(&(matrix1.mat[0]),3, 3, matrix1.nMat + 2, false, false);
+
     arma::uword nMat = (arma::uword)matrix1.nMat;
-    thisMat.slice(thisMat.n_slices - 2) = arma::zeros<arma::mat>(3, 3);
-    thisMat.slice(thisMat.n_slices - 1) = arma::eye<arma::mat>(3, 3);
+    thisMat.slice(nMat) = arma::zeros<arma::mat>(3, 3);
+    thisMat.slice(nMat + 1) = arma::eye<arma::mat>(3, 3);
 
     arma::Row<int>thisAniso(&(single_ion1.aniso[0]), single_ion1.nMagAtom);
     arma::Row<int>thisG(&(single_ion1.g[0]), single_ion1.nMagAtom);
@@ -55,15 +56,24 @@ void spinw::intmatrix(struct init_matrix &this_matrix, bool fitmode, bool plotmo
     }
 
     // Bonds
-    arma::mat allBonds (&(coupling1.dl[0][0]), 3, coupling1.nBond);
+//    arma::mat allBonds = arma::join_cols(
+//            arma::rowvec(&(coupling1.dl[0][0]),coupling1.nBond,false,false),
+//            arma::join_cols(
+//                    arma::rowvec(&(coupling1.dl[1][0]),coupling1.nBond,false,false),
+//                    arma::rowvec(&(coupling1.dl[2][0]),coupling1.nBond,false,false)
+//            )
+//    );
+    arma::mat allBonds(&coupling1.dl[0],coupling1.nBond,false,false);
+
     allBonds.insert_rows(allBonds.n_rows,
                          arma::rowvec(&(coupling1.atom1[0]),coupling1.nBond) - 1);
     allBonds.insert_rows(allBonds.n_rows,
                          arma::rowvec(&(coupling1.atom2[0]),coupling1.nBond) - 1);
 
-
     arma::rowvec couplingIDX(&(coupling1.idx[0]),coupling1.nBond);
     allBonds.insert_rows(allBonds.n_rows,couplingIDX - 1);
+
+    this_matrix.SS.all = allBonds;
 
 
     arma::urowvec lastSym = arma::find(couplingIDX <= (double)coupling1.nSym, 1, "last");
@@ -72,18 +82,53 @@ void spinw::intmatrix(struct init_matrix &this_matrix, bool fitmode, bool plotmo
     // extract the assigned bonds
 
     //TODO maybe this is coupling1.nsym Need to check......
-    arma::umat mat_idx = arma::conv_to<arma::umat>::from(
-            arma::Mat<int>(&(coupling1.mat_idx[0][0]),3,coupling1.nBond));
-    mat_idx = mat_idx.t();
 
-    arma::mat mat_type = arma::conv_to<arma::mat>::from(
-            arma::Mat<int>(&(coupling1.type[0][0]), 3, coupling1.nBond));
-    mat_type = mat_type.t();
+//    arma::mat mat_idx = arma::conv_to<arma::mat>::from(
+//            (arma::Mat<int>)arma::join_cols(
+//                    arma::Row<int>(&(coupling1.mat_idx[0][0]),coupling1.nBond,false,false),
+//            arma::join_cols(
+//                    arma::Row<int>(&(coupling1.mat_idx[1][0]),coupling1.nBond,false,false),
+//                    arma::Row<int>(&(coupling1.mat_idx[2][0]),coupling1.nBond,false,false)
+//            )
+//    ));
+    arma::mat mat_idx = arma::conv_to<arma::mat>::from(arma::Mat<int>(&(coupling1.mat_idx[0]),coupling1.nBond,false,false));
+    arma::mat mat_idxT = mat_idx.t();
 
-    arma::mat mat_sym = arma::conv_to<arma::mat>::from(
-            arma::Mat<int>(&(coupling1.sym[0][0]), 3, coupling1.nBond));
-    mat_sym = mat_sym.t();
+//    arma::mat mat_type = arma::conv_to<arma::mat>::from(
+//            (arma::Mat<int>)arma::join_cols(
+//            arma::Row<int>(&(coupling1.type[0][0]),coupling1.nBond,false,false),
+//            arma::join_cols(
+//                    arma::Row<int>(&(coupling1.type[1][0]),coupling1.nBond,false,false),
+//                    arma::Row<int>(&(coupling1.type[2][0]),coupling1.nBond,false,false)
+//            )
+//    ));
+    arma::mat mat_type = arma::conv_to<arma::mat>::from(arma::Mat<int>(&(coupling1.type[0]),coupling1.nBond,false,false));
+    arma::mat mat_typeT = mat_type.t();
 
+//    arma::mat mat_sym = arma::conv_to<arma::mat>::from(
+//            (arma::Mat<int>)arma::join_cols(
+//                    arma::Row<int>(&(coupling1.sym[0][0]),coupling1.nBond,false,false),
+//                    arma::join_cols(
+//                            arma::Row<int>(&(coupling1.sym[1][0]),coupling1.nBond,false,false),
+//                            arma::Row<int>(&(coupling1.sym[2][0]),coupling1.nBond,false,false)
+//                    )
+//            ));
+    arma::mat mat_sym = arma::conv_to<arma::mat>::from(arma::Mat<int>(&(coupling1.sym[0]),coupling1.nBond,false,false));
+    arma::mat mat_symT = mat_sym.t();
 
+    JJstruct JJ = JJstruct();
+    JJ.idx = mat_idxT.elem(arma::find(mat_idxT != 0));
+    JJ.sym = mat_symT.elem(arma::find(mat_idxT != 0));
 
+    // keep the column index of each generated bond
+//    arma::colvec colSel  = arma::join_cols(
+//            arma::find(mat_idx.row(0) != 0),
+//            arma::join_cols(
+//                    arma::find(mat_idx.row(1) != 0),
+//                    arma::find(mat_idx.row(2) != 0)
+//            )
+//    );
+//    SS.all  = SS.all.each_row([colSel](arma::rowvec &R){
+//        R = R.elem(colSel);
+//    });
 }

@@ -16,7 +16,7 @@ typedef struct Hsw_sym Hsw_sym;
 
 //spinwave_opt spinwave_opt_ini(spinwave_opt opt);
 
-Hspinw* create_sw(lattice latt, unit_cell cell, twin tw, mag_str mag, unit un, char* dat_dir);
+Hspinw* create_sw(lattice latt, unit_cell cell, twin tw, matrix mat, single_ion si, coupling co, mag_str mag, unit un);
 //Hspinw* create_empty_sw();
 void destroy_sw(Hspinw *sw);
 double* sw_basisvector(Hspinw *sw, bool norm);

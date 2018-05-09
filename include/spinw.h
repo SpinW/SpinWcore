@@ -24,7 +24,7 @@ private:
 
 public:
 
-    explicit spinw(lattice latt, unit_cell cell, twin tw, mag_str mag, unit un);
+    explicit spinw(lattice latt, unit_cell cell, twin tw, matrix mat, single_ion si, coupling co, mag_str mag, unit un);
     ~spinw();
 
     arma::mat arma_spinwave(double* qRange, spinwave_opt options);

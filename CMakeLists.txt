@@ -62,7 +62,7 @@ add_library(
         swsym/src/symOperator.cpp swsym/include/symOperator.h
         swsym/src/oporder.cpp swsym/include/oporder.h
         src/templateFuncs.tpp include/templateFuncs.h # Template functions
-        )
+        src/spinwave.cpp include/spinwave.h)
 
 # Link with the required libraries.
 target_link_libraries(SpinW
