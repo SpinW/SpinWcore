@@ -79,7 +79,16 @@ typedef struct unit{
     char** label;
     double nformula;
     double qmat[3*3];
-}unit;
+
+# ifdef __cplusplus
+    unit(): kB(1000*arma::datum::k_evk),
+            muB(0.057883818066),
+            mu0(201.335431),
+            nformula(0)
+    {}
+
+#endif
+} unit;
 
 typedef struct spinwave_opt{
     bool notwin;
@@ -101,14 +110,14 @@ typedef struct spinwave_opt{
                     gtensor(false),cmplxBase(false), tid(-1), fid(-1) {}
 
 #endif
-}spinwave_opt;
+} spinwave_opt;
 
 # ifdef __cplusplus
 typedef struct matom_struct{
     arma::mat r;
     arma::urowvec idx;
     arma::rowvec S;
-}matom_struct;
+} matom_struct;
 
 typedef struct SS{
     arma::mat iso;
@@ -118,23 +127,23 @@ typedef struct SS{
     arma::mat bq;
     arma::mat dip;
     arma::mat all;
-}SS;
+} SS;
 
 typedef struct SI{
     arma::cube aniso;
     arma::cube g;
     arma::rowvec field;
-}SI;
+} SI;
 
 typedef struct init_matrix{
     struct SS SS;
     struct SI SI;
     arma::mat RR;
-}init_matrix;
+} init_matrix;
 
 typedef struct JJstruct{
-    arma::mat idx;
-    arma::mat sym;
+    arma::uvec idx;
+    arma::uvec sym;
     arma::cube mat;
     arma::mat type;
     arma::mat iso;
@@ -142,7 +151,7 @@ typedef struct JJstruct{
     arma::mat ani;
     arma::mat dm;
     arma::mat gen;
-}JJstruct;
+} JJstruct;
 
 #endif
 

@@ -254,7 +254,7 @@ template <typename T, typename TT> std::tuple<arma::urowvec, arma::urowvec> isne
 template <typename T, typename TT> arma::Cube<typename T::elem_type> cubeSlice(T &inCube, TT &someVec){
     using namespace arma;
 
-    uvec gTh1  = find(someVec > 1);
+    uvec gTh1  = arma::find(someVec > 1);
 
     bool isLogical = false;
     if (gTh1.n_elem > 0 && someVec.n_elem != inCube.n_slices) {

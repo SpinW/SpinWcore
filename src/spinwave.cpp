@@ -6,7 +6,7 @@
 #include "../include/spinw.h"
 #include "../include/sw_additions.h"
 
-#define PI 3.14159265
+#define PI arma::datum::pi
 
 arma::mat spinw::arma_spinwave(double* qRange, spinwave_opt options) {
 

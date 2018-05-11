@@ -80,6 +80,9 @@ TEST(SwCoreIntMatrix, M1){
 
     thisCoupling.rdip = 0;
     thisCoupling.nSym = 0;
+    int idxC[] = {1, 1, 1, 2, 2, 2, 3, 3,
+                  3, 4, 4, 4, 4, 4, 4, 5,
+                  5, 5, 5, 6, 6, 6, 6, 6, 6};
     for (int i = 0; i < 25; i++){
         thisCoupling.atom1[i] = 1;
         thisCoupling.atom2[i] = 1;
@@ -90,6 +93,8 @@ TEST(SwCoreIntMatrix, M1){
         thisCoupling.dl[i*3 + 0] = dl[i*3 + 0];
         thisCoupling.dl[i*3 + 1] = dl[i*3 + 1];
         thisCoupling.dl[i*3 + 2] = dl[i*3 + 2];
+
+        thisCoupling.idx[i] = idxC[i];
 
         if (i < 3){
             thisCoupling.sym[i*3 + 0] = 1;

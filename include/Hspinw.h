@@ -22,6 +22,6 @@ void destroy_sw(Hspinw *sw);
 double* sw_basisvector(Hspinw *sw, bool norm);
 double* sw_spinwave(Hspinw* sw, double* qRange, spinwave_opt options);
 
-Hsw_sym* loadsym(char* dat_dir);
+Hsw_sym* loadsym();
 
 #endif //SPINW_HSPINW_H
