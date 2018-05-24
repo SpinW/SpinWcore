@@ -13,8 +13,7 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     # require at least gcc 4.8
     if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 4.8)
         message(FATAL_ERROR "GCC version must be at least 4.8, but might not work with MATLAB.")
-    endif()
-        if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 5.3)
+    elseif(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 5.3)
         message(WARNING "GCC version must be at least 5.3 to be fully compatible!")
     endif()
 else()
@@ -50,6 +49,8 @@ add_library(
         SpinW SHARED
         src/spinw.cpp include/spinw.h
         src/atom.cpp include/atom.h
+        src/spinwave.cpp include/spinwave.h
+        src/magstr.cpp include/magstr.h
         src/intmatrix.cpp include/intmatrix.h
         src/Hspinw.cpp include/Hspinw.h # The main files and C interface
         include/sw_structs.h # Helpful structures
@@ -62,7 +63,7 @@ add_library(
         swsym/src/symOperator.cpp swsym/include/symOperator.h
         swsym/src/oporder.cpp swsym/include/oporder.h
         src/templateFuncs.tpp include/templateFuncs.h # Template functions
-        src/spinwave.cpp include/spinwave.h)
+        )
 
 # Link with the required libraries.
 target_link_libraries(SpinW
