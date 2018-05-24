@@ -29,11 +29,12 @@ public:
 
     arma::mat arma_spinwave(double* qRange, spinwave_opt options);
     std::tuple<arma::cube, arma::mat> arma_twinq(arma::mat q0, arma::cube rotc);
-    void intmatrix(init_matrix &this_matrix, bool fitmode, bool plotmode, bool sortDM, bool zeroC, bool extend, bool conjugate);
+    void intmatrix(int_matrix &this_matrix, bool fitmode, bool plotmode, bool sortDM, bool zeroC, bool extend, bool conjugate);
     std::tuple<arma::mat, arma::urowvec, arma::urowvec> atom();
     matom_struct matom();
 
     double* spinwave(double* qRange, spinwave_opt options);
+    magRot magstr(bool isExact, arma::urowvec newExt, arma::rowvec newOrigin);
     double* basisvector(bool norm);
 };
 

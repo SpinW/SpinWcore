@@ -151,11 +151,33 @@ arma::mat spinw::arma_spinwave(double* qRange, spinwave_opt options) {
 
     // Create the interaction matrix and atomic positions in the extended
     // magnetic unit cell.
-    struct init_matrix this_return;
-//    void spinw::initmatrix(struct init_matrix *this_matrix, bool fitmode, bool plotmode, bool sortDM, bool zeroC, bool extend, bool conjugate)
-    intmatrix(this_return, true, false, false, false, false, true);
+    struct int_matrix intMatrices;
+//    void spinw::initmatrix(struct int_matrix *this_matrix, bool fitmode, bool plotmode, bool sortDM, bool zeroC, bool extend, bool conjugate)
+    intmatrix(intMatrices, true, false, false, false, false, true);
+    intMatrices.SS.all = arma::join_horiz(intMatrices.SS.all, intMatrices.SS.dip);
 
+    arma::urowvec bq = intMatrices.SS.all.row(15) == 1;
 
+    if (arma::any(bq)){
+        intMatrices.SS.bq = intMatrices.SS.all.rows(0,5);
+        intMatrices.SS.bq = intMatrices.SS.bq.cols(bq);
+
+        arma::urowvec allSelect = intMatrices.SS.all.row(15) == 0;
+        intMatrices.SS.all = intMatrices.SS.all.rows(0,14);
+        intMatrices.SS.all = intMatrices.SS.all.cols(allSelect);
+    }
+
+    //TODO Convert wavevctor list into the extended unit cell
+//    hklExt  = bsxfun(@times,hklExt,nExt')*2*pi;
+//                                       % q values without the +/-k_m value
+//    hklExt0 = bsxfun(@times,hkl0,nExt')*2*pi;
+//
+//                                     % Calculates parameters eta and zed.
+//    if isempty(magStr.S)
+//    error('spinw:spinwave:NoMagneticStr','No magnetic structure defined in obj!');
+//    end
+
+    magRot magInRot =
 //
 //    arma::cube F0R(&(mag_str1.F_real[0][0][0]),3,mag_str1.nMagExt,mag_str1.nK,false,true);
 //    arma::cube F0I(&(mag_str1.F_imag[0][0][0]),3,mag_str1.nMagExt,mag_str1.nK,false,true);

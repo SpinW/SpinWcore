@@ -6,7 +6,7 @@
 #include "../include/templateFuncs.h"
 
 
-void spinw::intmatrix(struct init_matrix &this_matrix, bool fitmode, bool plotmode, bool sortDM, bool zeroC, bool extend, bool conjugate){
+void spinw::intmatrix(struct int_matrix &this_matrix, bool fitmode, bool plotmode, bool sortDM, bool zeroC, bool extend, bool conjugate){
 
     arma::rowvec nExt0 = {(double)mag_str1.nExt[0],
                           (double)mag_str1.nExt[1],

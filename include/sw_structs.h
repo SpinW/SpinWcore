@@ -135,11 +135,11 @@ typedef struct SI{
     arma::rowvec field;
 } SI;
 
-typedef struct init_matrix{
+typedef struct int_matrix{
     struct SS SS;
     struct SI SI;
     arma::mat RR;
-} init_matrix;
+} int_matrix;
 
 typedef struct JJstruct{
     arma::uvec idx;
@@ -152,6 +152,14 @@ typedef struct JJstruct{
     arma::mat dm;
     arma::mat gen;
 } JJstruct;
+
+typename struct magRot{
+    arma::mat S;
+    arma::rowvec k;
+    arma::urowvec n;
+    arma::urowvec N_ext;
+    bool exact;
+} magRot;
 
 #endif
 

@@ -131,7 +131,7 @@ TEST(SwCoreIntMatrix, M1){
 
     spinw s = spinw(thisLattice, thisUnitCell, twin(), thisMat, thisIon, thisCoupling, thisMagStr, unit());
 
-    init_matrix intMatrixResult = init_matrix();
+    int_matrix intMatrixResult = int_matrix();
     s.intmatrix(intMatrixResult, true, false, false, false, false, true);
 
 }
