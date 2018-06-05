@@ -77,6 +77,69 @@ static arma::Cube<typename T::elem_type> permute(const T &inCube, int order[]) {
     return output;
 }
 
+
+template<typename T>
+static arma::field<typename T::elem_type> permuteField(const T &inCube, int order[]) {
+    using namespace arma;
+
+    int op1 = order[0];
+    int op2 = order[1];
+    int op3 = order[2];
+
+    int perm = op1 * 100 + op2 * 10 + op3;
+
+    if (perm == 123) {
+        return inCube;
+    }
+
+    uword dimension[] = {inCube.n_rows, inCube.n_cols, inCube.n_slices};
+
+    uword rows = dimension[op1 - 1];
+    uword cols = dimension[op2 - 1];
+    uword slis = dimension[op3 - 1];
+
+
+    field<typename T::elem_type> output(rows, cols, slis);
+
+#pragma omp parallel for
+    for (int s = 0; s < inCube.n_slices; ++s) {
+        auto this_slice = inCube.slice(s); // rxc
+
+        if (op1 == 2 & op2 == 1) {
+            if (op3 == 3) { // 2 1 3
+                output.slice(s) = this_slice.t(); // cxr = (rxc)'
+            } else {
+                throw std::invalid_argument(std::string("Element is duplicated"));
+            }
+        } else { // [1 2 3] [1 2 3] [1 2 3]
+            if (op3 == 1) { // [1 2 3] [1 2 3] [1]
+                for (int r = 0; r < inCube.n_rows; ++r) {
+                    if (op1 == 2) { // [2] [1 2 3] [1]
+                        output.slice(r)(arma::span::all, s) = vectorise(this_slice(r, arma::span::all)); //Thia probably wont work :-(
+                    } else if (op1 == 3) { // [3] [1 2 3] [1]
+                        output.slice(r)(s, arma::span::all) = this_slice(r, arma::span::all);
+                    } else {
+                        throw std::invalid_argument(std::string("Element is duplicated"));
+                    }
+                }
+            } else if (op3 == 2) { // [1 2 3] [1 2 3] [2]
+                for (int c = 0; c < inCube.n_cols; ++c) {
+                    if (op2 == 1) { // [1 2 3] [1] [2]
+                        output.slice(c)(s, arma::span::all) = this_slice(arma::span::all, c).t();
+                    } else if (op2 == 3) { // [1 2 3] [3] [2]
+                        output.slice(c)(arma::span::all, s) = this_slice(arma::span::all, c);
+                    } else {
+                        throw std::invalid_argument(std::string("Element is duplicated"));
+                    }
+                }
+            } else{
+                throw std::invalid_argument(std::string("Element is duplicated"));
+            }
+        }
+    }
+    return output;
+}
+
 template<typename T, typename TT>
 arma::Mat<typename T::elem_type> mmat(const T &X, const TT &Y, int dim[]) {
 
@@ -197,6 +260,42 @@ template <typename T> arma::Mat<typename T::elem_type> uniquetol(T inMat, double
     return unique;
 }
 
+template <typename T> std::tuple<arma::Mat<typename T::elem_type>, arma::urowvec> uniquetolFI(T inMat, double tol){
+/*
+    Returns unique column vectors within the given
+    `tol` tolerance. Two column vectors are considered
+    unequal, if the distance between them is larger than
+    the tolerance ($\delta$):
+*/
+    arma::Mat<typename T::elem_type> unique; // Placeholder for the return
+    arma::urowvec firstIDX;
+
+    while (inMat.n_cols > 0) {
+        // Create keep/destroy vectors
+        std::vector<arma::uword> keepIDX, destIDX;
+        keepIDX.reserve(inMat.n_cols);
+        destIDX.reserve(inMat.n_cols);
+
+        arma::uword idx = 0;
+
+        // Loop over and check if we want to keep or destroy
+        for (arma::uword ind = 0; ind < inMat.n_cols; ind++) {
+            if (!arma::approx_equal(inMat(arma::span(), 0), inMat(arma::span(), ind), "absdiff", tol)) {
+                keepIDX.push_back(ind);
+                idx = ind;
+            } else {
+                destIDX.push_back(ind);
+            }
+        }
+        // Copy first to unique
+        unique = arma::join_rows(unique, inMat(arma::span(), destIDX[0]));
+        // Purge all duplicates (including 0 idx)
+        inMat = inMat.cols(arma::uvec(keepIDX));
+        firstIDX.insert_cols(firstIDX.n_cols, arma::urowvec(1,arma::fill::ones)*idx);
+    }
+    return std::make_tuple(unique, firstIDX);
+}
+
 template <typename T> arma::Cube<typename T::elem_type> repCube(T &inCube,int i, int j, int k){
     // Create the same functionality of repmat, but for cubes.
     if ((i < 1) || (j < 1) || (k < 1)){
@@ -204,6 +303,26 @@ template <typename T> arma::Cube<typename T::elem_type> repCube(T &inCube,int i,
     }
 
     arma::Cube<typename T::elem_type>
+            retCube(inCube.n_rows*i, inCube.n_cols*j, inCube.n_slices*k);
+
+    for (arma::uword s = 0; s < inCube.n_slices; s++) {
+        // Expand each slice.
+        retCube.slice(s) = arma::repmat(inCube.slice(s), i, j);
+        // Replicate that expanded slice if needed.
+        for (arma::uword sR = 1; sR < k; sR++) {
+            retCube.slice(s + sR * inCube.n_slices) = retCube.slice(s);
+        }
+    }
+    return retCube;
+}
+
+template <typename T> arma::field<typename T::elem_type> repField(T &inCube,int i, int j, int k){
+    // Create the same functionality of repmat, but for cubes.
+    if ((i < 1) || (j < 1) || (k < 1)){
+        throw std::invalid_argument("Expansion variables should be positive.");
+    }
+
+    arma::field<typename T::elem_type>
             retCube(inCube.n_rows*i, inCube.n_cols*j, inCube.n_slices*k);
 
     for (arma::uword s = 0; s < inCube.n_slices; s++) {
@@ -251,20 +370,13 @@ template <typename T, typename TT> std::tuple<arma::urowvec, arma::urowvec> isne
 };
 
 
-template <typename T, typename TT> arma::Cube<typename T::elem_type> cubeSlice(T &inCube, TT &someVec){
+template <typename T, typename TT> arma::Cube<typename T::elem_type> cubeSlice(T &inCube, TT &someVec, bool isLogical){
     using namespace arma;
-
-    uvec gTh1  = arma::find(someVec > 1);
-
-    bool isLogical = false;
-    if (gTh1.n_elem > 0 && someVec.n_elem != inCube.n_slices) {
-        isLogical = true;
-    }
 
     Cube<typename T::elem_type> outCube;
 
     if (isLogical){
-        outCube = Cube<typename T::elem_type>(inCube.n_rows, inCube.n_cols, gTh1.n_elem);
+        outCube = Cube<typename T::elem_type>(inCube.n_rows, inCube.n_cols, arma::sum(someVec > 0));
         uword i = 0;
         for (uword s = 0; s < someVec.n_elem; s++){
             if (someVec(s) == 1){
@@ -276,7 +388,7 @@ template <typename T, typename TT> arma::Cube<typename T::elem_type> cubeSlice(T
     } else{
         outCube = Cube<typename T::elem_type>(inCube.n_rows, inCube.n_cols, someVec.n_elem);
         for (uword s = 0; s < someVec.n_elem; s++){
-            outCube.slice(someVec(s)) = inCube.slice(someVec(s));
+            outCube.slice(s) = inCube.slice(someVec(s));
         }
     }
 

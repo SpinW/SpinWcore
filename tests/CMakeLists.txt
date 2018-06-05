@@ -43,7 +43,7 @@ else()
             swsym/swsymTest.cpp
             additions/additionsTest.cpp
             spinw_core/swcore_atom.cpp
-            spinw_core/swcore_intmatrix.cpp)
+            spinw_core/swcore_intmatrix.cpp additions/ndmatTest.cpp)
     target_link_libraries(all_test
             gtest gmock_main
             SpinW

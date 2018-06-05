@@ -41,7 +41,7 @@ void spinw::intmatrix(struct int_matrix &this_matrix, bool fitmode, bool plotmod
             this_matrix.SI.aniso = arma::cube(thisMat.n_rows, thisMat.n_cols, 1);
             this_matrix.SI.aniso.slice(0) = thisMat.slice(redAniso(0));
         } else {
-            this_matrix.SI.aniso = cubeSlice(thisMat,redAniso);
+            this_matrix.SI.aniso = cubeSlice(thisMat, redAniso, false);
         }
         this_matrix.SI.aniso += permute(this_matrix.SI.aniso, perm);
         this_matrix.SI.aniso /= 2;
@@ -59,7 +59,7 @@ void spinw::intmatrix(struct int_matrix &this_matrix, bool fitmode, bool plotmod
             this_matrix.SI.g = arma::cube(thisMat.n_rows, thisMat.n_cols, 1);
             this_matrix.SI.g.slice(0) = thisMat.slice(redG(0));
         } else {
-            this_matrix.SI.g = cubeSlice(thisMat,redG);
+            this_matrix.SI.g = cubeSlice(thisMat, redG, false);
         }
         this_matrix.SI.g += permute(this_matrix.SI.g, perm);
         this_matrix.SI.g /= 2;

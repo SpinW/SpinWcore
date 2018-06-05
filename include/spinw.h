@@ -21,6 +21,7 @@ class spinw {
 
 private:
     matom_struct mag_cache;
+    symop_struct sym_cache;
 
 public:
 
@@ -32,7 +33,7 @@ public:
     void intmatrix(int_matrix &this_matrix, bool fitmode, bool plotmode, bool sortDM, bool zeroC, bool extend, bool conjugate);
     std::tuple<arma::mat, arma::urowvec, arma::urowvec> atom();
     matom_struct matom();
-
+    symop_struct symop();
     double* spinwave(double* qRange, spinwave_opt options);
     magRot magstr(bool isExact, arma::urowvec newExt, arma::rowvec newOrigin);
     double* basisvector(bool norm);

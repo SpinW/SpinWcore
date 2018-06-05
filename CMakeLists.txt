@@ -50,8 +50,10 @@ add_library(
         src/spinw.cpp include/spinw.h
         src/atom.cpp include/atom.h
         src/spinwave.cpp include/spinwave.h
-        src/magstr.cpp include/magstr.h
+#        Removing magstr until matrix problem sorted. Using structs for now.
+#        src/magstr.cpp include/magstr.h
         src/intmatrix.cpp include/intmatrix.h
+        src/symop.cpp include/symop.h
         src/Hspinw.cpp include/Hspinw.h # The main files and C interface
         include/sw_structs.h # Helpful structures
         src/sw_additions.cpp include/sw_additions.h
@@ -63,7 +65,8 @@ add_library(
         swsym/src/symOperator.cpp swsym/include/symOperator.h
         swsym/src/oporder.cpp swsym/include/oporder.h
         src/templateFuncs.tpp include/templateFuncs.h # Template functions
-        )
+        src/ndmat.tpp include/ndmat.h
+)
 
 # Link with the required libraries.
 target_link_libraries(SpinW

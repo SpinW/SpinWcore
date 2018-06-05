@@ -72,6 +72,15 @@ typedef struct mag_str{
     int nK;
 } mag_str;
 
+// This is a replacement for the magstr function :-(
+typedef struct magstr{
+    double S[3*100*10*10*10];
+    double k[3*10];
+    double n[3];
+    int N_ext[3];
+    bool exact;
+} magstr;
+
 typedef struct unit{
     double kB;
     double muB;
@@ -119,6 +128,11 @@ typedef struct matom_struct{
     arma::rowvec S;
 } matom_struct;
 
+typedef struct symop_struct {
+    arma::cube sion;
+    arma::cube bond;
+} symop_struct;
+
 typedef struct SS{
     arma::mat iso;
     arma::mat ani;
@@ -153,7 +167,7 @@ typedef struct JJstruct{
     arma::mat gen;
 } JJstruct;
 
-typename struct magRot{
+typedef struct magRot{
     arma::mat S;
     arma::rowvec k;
     arma::urowvec n;

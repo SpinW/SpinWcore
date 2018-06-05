@@ -177,7 +177,8 @@ arma::mat spinw::arma_spinwave(double* qRange, spinwave_opt options) {
 //    error('spinw:spinwave:NoMagneticStr','No magnetic structure defined in obj!');
 //    end
 
-    magRot magInRot =
+    //TODO This needs to call magstr....
+//    magRot magInRot = magRot();
 //
 //    arma::cube F0R(&(mag_str1.F_real[0][0][0]),3,mag_str1.nMagExt,mag_str1.nK,false,true);
 //    arma::cube F0I(&(mag_str1.F_imag[0][0][0]),3,mag_str1.nMagExt,mag_str1.nK,false,true);
