@@ -37,7 +37,7 @@ static arma::Cube<typename T::elem_type> permute(const T &inCube, int order[]) {
 
     Cube<typename T::elem_type> output(rows, cols, slis, fill::zeros);
 
-#pragma omp parallel for
+//#pragma omp parallel for
     for (int s = 0; s < inCube.n_slices; ++s) {
         auto this_slice = inCube.slice(s); // rxc
 
@@ -101,7 +101,6 @@ static arma::field<typename T::elem_type> permuteField(const T &inCube, int orde
 
     field<typename T::elem_type> output(rows, cols, slis);
 
-#pragma omp parallel for
     for (int s = 0; s < inCube.n_slices; ++s) {
         auto this_slice = inCube.slice(s); // rxc
 

@@ -18,8 +18,8 @@ download_project(
 # Prevent GoogleTest from overriding our compiler/linker options
 # when building with Visual Studio
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-
 add_subdirectory(${googletest_SOURCE_DIR} ${googletest_BINARY_DIR})
+
 
 # When using CMake 2.8.11 or later, header path dependencies
 # are automatically added to the gtest and gmock targets.
@@ -29,6 +29,10 @@ if (CMAKE_VERSION VERSION_LESS 2.8.11)
     include_directories("${gtest_SOURCE_DIR}/include"
             "${gmock_SOURCE_DIR}/include")
 endif()
+
+
+option(PERFORMANCE_PROFILE "Link against gperftools" ON)
+
 
 # Use gtest and gmock
 if (MAKE_IDIVIDUAL_TESTS)
@@ -43,11 +47,18 @@ else()
             swsym/swsymTest.cpp
             additions/additionsTest.cpp
             spinw_core/swcore_atom.cpp
-            spinw_core/swcore_intmatrix.cpp additions/ndmatTest.cpp)
+            spinw_core/swcore_intmatrix.cpp
+            additions/ndmatTest.cpp)
     target_link_libraries(all_test
             gtest gmock_main
             SpinW
             ${ARMADILLO_LIBRARIES}
             ${MKL_LIBRARIES} pthread dl)
+
+    if(PERFORMANCE_PROFILE)
+        find_package(Gperftools)
+        target_link_libraries(all_test ${GPERFTOOLS_TCMALLOC_AND_PROFILER})
+    endif()
+
     add_test(NAME all_test COMMAND all_test)
 endif()

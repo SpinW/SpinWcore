@@ -1,8 +1,9 @@
 cmake_minimum_required(VERSION 3.6)
 
 project(SpinW)
-set(DO_TESTS "TRUE")
-set(MAKE_IDIVIDUAL_TESTS "FALSE")
+
+option(DO_TESTS "Make tests" ON)
+option(MAKE_IDIVIDUAL_TESTS "Split the tests individually" OFF)
 
 set(CMAKE_CXX_STANDARD 11)
 #Make highly optimised

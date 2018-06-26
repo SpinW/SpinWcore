@@ -11,4 +11,9 @@ target_link_libraries(template_test
         ${ARMADILLO_LIBRARIES}
         ${MKL_LIBRARIES} pthread dl)
 
+if(PERFORMANCE_PROFILE)
+    find_package(Gperftools)
+    target_link_libraries(all_test ${GPERFTOOLS_TCMALLOC_AND_PROFILER})
+endif()
+
 add_test(NAME template_test COMMAND template_test)

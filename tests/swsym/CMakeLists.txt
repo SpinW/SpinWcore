@@ -11,4 +11,9 @@ target_link_libraries(swsym_test
         ${ARMADILLO_LIBRARIES}
         ${MKL_LIBRARIES} pthread dl)
 
+if(PERFORMANCE_PROFILE)
+    find_package(Gperftools)
+    target_link_libraries(all_test ${GPERFTOOLS_TCMALLOC_AND_PROFILER})
+endif()
+
 add_test(NAME swsym_test COMMAND swsym_test)
